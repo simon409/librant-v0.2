@@ -177,7 +177,6 @@ const BookCard = ({ id, title, author, description, image }) => {
     if (event.target.closest('.MuiIconButton-root') !== null) {
       return;
     }
-    trackBookClick(bookId);
     history.push(`/books/${id}`);
   };
 

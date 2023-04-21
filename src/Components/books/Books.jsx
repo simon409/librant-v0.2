@@ -86,7 +86,7 @@ export default function Books() {
               type="text"
               variant='outlined'
               placeholder='Type to search for the book'
-              onChange={e=>setsearchbook(e.target.value)}
+              onChange={e=>handleSearch(e)}
               />
             </FormControl>
             <FormControl  sx={{background: '#fff', borderRadius: '5px', width: '150px', marginTop:'20px'}}>
@@ -141,8 +141,6 @@ export default function Books() {
                 count={Math.ceil(filteredBooks.length / booksPerPage)}
                 page={page}
                 onChange={(event, value) => setPage(value)}
-                variant="outlined"
-                shape="rounded"
               />
             </div>
           </>
