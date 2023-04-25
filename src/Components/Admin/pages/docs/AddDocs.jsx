@@ -20,13 +20,12 @@ import {BiBookAdd} from "react-icons/bi"
 import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
 import { useMutation } from 'react-query';
-import { createBook } from '../../api/books/createBook';
+import { createDoc } from '../../api/docs/createDoc';
 import ErrorMessage from '../components/ErrorMessage';
 import { colors } from '../theme/colors';
-import { generateId } from '../../utils/generatedID';
 import Loader from '../components/Loader';
 import { storage } from '../../../../firebase';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import withAdminCheck from '../withAdminCheck'
 
 
@@ -58,8 +57,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
   const AddBookSchema = Yup.object().shape({
-    title: Yup.string().required("Title is required"),
-    author: Yup.string().required("Author is required"),
+    name: Yup.string().required("Name is required"),
     description: Yup.string().required("Description is required"),
   });
 
@@ -68,8 +66,9 @@ const AddDocs = () => {
     const classes = useStyles();
     const history = useHistory();
     const [category, setCategory] = useState("");
+    const [Progress, setProgress] = useState(0);
     const [Doc, setDoc] = useState(null);
-    const { isLoading, error, mutate } = useMutation(createBook);
+    const { isLoading, error, mutate } = useMutation(createDoc);
 
     const handleDocChange = (e) => {
         if (e.target.files[0]) {
@@ -81,26 +80,53 @@ const AddDocs = () => {
         initialValues: {
         name: "",
         description: "",
+        category: "",
         doc: ""
         },
         validationSchema: AddBookSchema,
         onSubmit: async (values) => {
             // Upload image to Firebase Storage
-        const docRef = ref(storage, 'docs/'+Doc.name);
-        uploadBytes(docRef, Doc).then((snapshot) => {
-            console.log('Uploaded a blob or file!');
-        });
-        const docURL = await getDownloadURL(docRef);
-        const book = {
-            id: generateId(),
-            name: values.title,
+        const docRef = ref(storage, 'docs/'+Doc.name+Date.now());
+        
+        const uploadTask = uploadBytesResumable(docRef, Doc);
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on('state_changed',
+        (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100, 2);
+        setProgress(progress);
+        switch (snapshot.state) {
+            case 'paused':
+            console.log('Upload is paused');
+            break;
+            case 'running':
+            console.log('Upload is running');
+            break;
+        }
+        },
+        (error) => {
+        // Handle unsuccessful uploads
+        console.error(error);
+        },
+        async () => {
+        // Handle successful uploads on complete
+        console.log('File uploaded successfully');
+        
+        // Get download URL of uploaded file
+        await getDownloadURL(docRef).then((docURL) => {
+            const doc = {
+            name: values.name,
             description: values.description,
-            doc: docURL,
-            category,
-        };
-        mutate(book, {
-            onSuccess: () => history.push("/books"),
+            category: category,
+            doc: docURL
+            };
+            // Save book data to Firestore
+            mutate(doc, {
+                onSuccess: () => history.push("/showdocs"),
+            });
         });
+        }
+    );
         },
     });
     return (
@@ -143,11 +169,11 @@ const AddDocs = () => {
                                 id="name"
                                 name="name"
                                 label="Name"
-                                value={formik.values.title}
+                                value={formik.values.name}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                error={formik.touched.title && Boolean(formik.errors.title)}
-                                helperText={formik.touched.title && formik.errors.title}
+                                error={formik.touched.name && Boolean(formik.errors.name)}
+                                helperText={formik.touched.name && formik.errors.name}
                             />
                             <label htmlFor="descriptionInput" className="text-gray-700 font-medium mb-2 block mt-6">
                                 Description
@@ -177,28 +203,23 @@ const AddDocs = () => {
                                     id="category"
                                     variant="outlined"
                                     fullWidth
-                                    margin="normal"
                                     value={category}
-                                    onChange={(e) => setCategory(e.target.value)}
+                                    onChange={e=>setCategory(e.target.value)}
                                     label="Category"
                                     className={classes.selectEmpty}
                                 >
-                                    <MenuItem value="">
-                                    <em>None</em>
-                                    </MenuItem>
-                                    <MenuItem value="fiction">Fiction</MenuItem>
-                                    <MenuItem value="non-fiction">Non-Fiction</MenuItem>
-                                    <MenuItem value="memoir">Memoir</MenuItem>
+                                    <MenuItem value="fiction">Exams</MenuItem>
+                                    <MenuItem value="non-fiction">Lesson</MenuItem>
                                 </Select>
                             </FormControl>
                             <label htmlFor="imageInput" className="text-gray-700 font-medium mb-2 block mt-6">
                                 Document
                             </label>
-                            <div className="mb-4">
+                            <div className="mb-4 flex">
                                 <input
                                 type="file"
                                 id="docInput"
-                                accept="pdf/*"
+                                accept="application/pdf"
                                 onChange={handleDocChange}
                                 className="hidden"
                                 />
@@ -208,6 +229,7 @@ const AddDocs = () => {
                                 >
                                 {Doc ? 'Change Document' : 'Upload Document'}
                                 </label>
+                                <div className="text-lg my-auto pl-4 ">{Doc != null ? (Progress+'% Completed') : 'Select Document'}</div>
                             </div>
 
                             <Button
@@ -217,7 +239,7 @@ const AddDocs = () => {
                                 startIcon={<BiBookAdd/>}
                                 className="w-full py-3 text-lg font-medium bg-blue-600 hover:bg-blue-700 focus:outline-none focus:shadow-outline-blue active:bg-blue-800 transition duration-150 ease-in-out"
                                 >
-                                Add Book
+                                Add Document
                             </Button>
                         </form>
                     </div>

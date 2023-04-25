@@ -156,7 +156,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                 <rect width="24" height="24"/>
                               </clipPath>
                             </defs>
-                            <g id="a" clip-path="url(#b)">
+                            <g id="a" clipPath="url(#b)">
                               <rect className={`fill-current ${pathname.includes('showbooks') ? 'text-indigo-300' : 'text-slate-400'}`} width="16" height="16" rx="1" transform="translate(5 6)"/>
                               <rect className={`fill-current ${pathname.includes('showbooks') ? 'text-indigo-500' : 'text-slate-600'}`} width="16" height="16" rx="1" transform="translate(3 4)"/>
                               <path className={`fill-current ${pathname.includes('showbooks') ? 'text-indigo-600' : 'text-slate-700'}`} d="M0,0H6A0,0,0,0,1,6,0V9a1,1,0,0,1-1,1H1A1,1,0,0,1,0,9V0A0,0,0,0,1,0,0Z" transform="translate(11 4)"/>
@@ -227,9 +227,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
                           <svg className=' shrink-0 h-6 w-6' viewBox="0 0 24 24">
-                          <path className={`fill-current ${pathname.includes('showdocs') ? 'text-indigo-300' : 'text-slate-400'}`} id="Icon_ionic-md-document" data-name="Icon ionic-md-document" d="M15.877,3.375H8.651a1.9,1.9,0,0,0-1.9,1.9V21.248a1.9,1.9,0,0,0,1.9,1.9H20.06a1.9,1.9,0,0,0,1.9-1.9V9.459Zm-.761,6.845V4.9L20.44,10.22Z" transform="translate(-6.75 -2.375)" fill="#a5b4fc"/>
-                          <path className={`fill-current ${pathname.includes('showdocs') ? 'text-indigo-500' : 'text-slate-600'}`} id="Icon_ionic-md-document-2" data-name="Icon ionic-md-document" d="M15.877,3.375H8.651a1.9,1.9,0,0,0-1.9,1.9V21.248a1.9,1.9,0,0,0,1.9,1.9H20.06a1.9,1.9,0,0,0,1.9-1.9V9.459Zm-.761,6.845V4.9L20.44,10.22Z" transform="translate(-5.75 -3.375)" fill="#6366f1"/>
-                          <path className={`fill-current ${pathname.includes('showdocs') ? 'text-indigo-600' : 'text-slate-700'}`} id="Path_1" data-name="Path 1" d="M12.745,3.609V9.016h5.4Z" transform="translate(-3.395 -2.113)" fill="#4f46e5"/>
+                          <path className={`fill-current ${pathname.includes('showdocs') || pathname.includes('adddocs') ? 'text-indigo-300' : 'text-slate-400'}`} id="Icon_ionic-md-document" data-name="Icon ionic-md-document" d="M15.877,3.375H8.651a1.9,1.9,0,0,0-1.9,1.9V21.248a1.9,1.9,0,0,0,1.9,1.9H20.06a1.9,1.9,0,0,0,1.9-1.9V9.459Zm-.761,6.845V4.9L20.44,10.22Z" transform="translate(-6.75 -2.375)"/>
+                          <path className={`fill-current ${pathname.includes('showdocs') || pathname.includes('adddocs') ? 'text-indigo-500' : 'text-slate-600'}`} id="Icon_ionic-md-document-2" data-name="Icon ionic-md-document" d="M15.877,3.375H8.651a1.9,1.9,0,0,0-1.9,1.9V21.248a1.9,1.9,0,0,0,1.9,1.9H20.06a1.9,1.9,0,0,0,1.9-1.9V9.459Zm-.761,6.845V4.9L20.44,10.22Z" transform="translate(-5.75 -3.375)"/>
+                          <path className={`fill-current ${pathname.includes('showdocs') || pathname.includes('adddocs') ? 'text-indigo-600' : 'text-slate-700'}`} id="Path_1" data-name="Path 1" d="M12.745,3.609V9.016h5.4Z" transform="translate(-3.395 -2.113)" fill="#4f46e5"/>
                           <path id="Icon_awesome-bars" data-name="Icon awesome-bars" d="M.276,5.462H7.458a.276.276,0,0,0,.276-.276V4.495a.276.276,0,0,0-.276-.276H.276A.276.276,0,0,0,0,4.495v.691A.276.276,0,0,0,.276,5.462Zm0,2.762H7.458a.276.276,0,0,0,.276-.276V7.257a.276.276,0,0,0-.276-.276H.276A.276.276,0,0,0,0,7.257v.691A.276.276,0,0,0,.276,8.224Zm0,2.762H7.458a.276.276,0,0,0,.276-.276v-.691a.276.276,0,0,0-.276-.276H.276A.276.276,0,0,0,0,10.019v.691A.276.276,0,0,0,.276,10.986Z" transform="translate(4.738 4.995)" fill="#fff"/>
                             
                           </svg>

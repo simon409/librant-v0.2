@@ -21,9 +21,6 @@ const withAdminCheck = (Component) => {
                 history.push('/'); // Redirect non-admin users to home page
               }*/
             })
-            .catch((error) => {
-              console.log(error);
-            });
         } else {
           history.push('/login'); // Redirect users who are not logged in to login page
         }

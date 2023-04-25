@@ -169,7 +169,7 @@ function AddPlayList({idbook, onClose, playlisted, playlistedname}) {
   );
 }
 
-const BookCard = ({ id, title, author, description, image }) => {
+const DocCard = ({ id, name, description, image }) => {
   const history = useHistory();
   
   const handleClick = (event) => {
@@ -177,7 +177,7 @@ const BookCard = ({ id, title, author, description, image }) => {
     if (event.target.closest('.MuiIconButton-root') !== null) {
       return;
     }
-    history.push(`/books/${id}`);
+    history.push(`/docs/${id}`);
   };
 
   const [isFavorited, setIsFavorited] = useState(false);
@@ -282,10 +282,10 @@ const BookCard = ({ id, title, author, description, image }) => {
       <div className="test">
         {showplaylist ? <AddPlayList idbook={id} onClose={() => setshowplaylist(false)} playlisted={isPlayListed} playlistedname={playlistsnames}/> : null}
       </div>
-      <Card className="max-w-md mx-auto mt-8 cursor-pointer" onClick={handleClick}>
+      <Card className="max-w-md mx-auto mt-8 cursor-pointer h-full" onClick={handleClick}>
         
         <div className="relative">
-          <CardMedia className="h-48 md:h-48 lg:h-48" image={image} title={title} />
+          <CardMedia className="h-48 md:h-48 lg:h-48" image={image} name={name} />
           <div className="absolute top-2 right-2 z-10 flex gap-2">
           <IconButton 
               color={isPlayListed ? "primary" : "default"} 
@@ -317,10 +317,7 @@ const BookCard = ({ id, title, author, description, image }) => {
         </div>
         <CardContent>
           <Typography variant="h5" color="textprimary" component="p" className=" text-mypalette-2 mb-4 text-xl">
-            {title}
-          </Typography>
-          <Typography variant="subtitle1" color="textSecondary" component="p" className="text-teal-500 mb-4">
-            {author}
+            {name}
           </Typography>
           <Typography variant="body2" component="p" className="text-gray-700">
             {`${description.substring(0, Math.min(description.indexOf('\n') !== -1 ? description.indexOf('\n') : 90, 90))}...`}
@@ -332,4 +329,4 @@ const BookCard = ({ id, title, author, description, image }) => {
   );
 };
 
-export default BookCard;
+export default DocCard;

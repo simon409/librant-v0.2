@@ -23,6 +23,7 @@ import AddDocs from './Components/Admin/pages/docs/AddDocs';
 //books user stuff
 import Books from './Components/books/Books';
 import ShowBook from './Components/books/showbook';
+import ShowDocsUser from './Components/books/docs/ShowDocs';
 
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
       {/*books user stuff */}
       <Route exact path="/books" component={Books} />
       <Route exact path="/books/:id" component={ShowBook} />
+      <Route exact path="/docs/:id" component={ShowDocsUser} />
 
       {/*404 page */}
       <Route exact path="/404" component={Error} />

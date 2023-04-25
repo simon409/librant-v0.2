@@ -6,12 +6,12 @@ import { BrowserRouter } from "react-router-dom/cjs/react-router-dom";
 import ReactGA from 'react-ga';
 import { reportWebVitals } from './reportWebVitals';
 import { QueryClient, QueryClientProvider } from "react-query";
-import algoliasearch from "algoliasearch";
+//import algoliasearch from "algoliasearch";
 import { getDatabase, ref, onValue } from "firebase/database";
 
-const client = algoliasearch("Q952IEQ11T", "053e198550c71739825b3387cfe7352c");
+//const client = algoliasearch("Q952IEQ11T", "053e198550c71739825b3387cfe7352c");
 //create new index 
-const algoliaIndex = client.initIndex('book_recommandation');
+//const algoliaIndex = client.initIndex('book_recommandation');
 const db = getDatabase();
 const bookRef = ref(db, "books");
 onValue(bookRef, (snapshot) => {
@@ -29,14 +29,14 @@ onValue(bookRef, (snapshot) => {
     };
   });
   // `transformedBooks` is now an array of objects that can be indexed by Algolia
-  algoliaIndex.saveObjects(transformedBooks, (err, content) => {
+  /*algoliaIndex.saveObjects(transformedBooks, (err, content) => {
     if (err) {
       console.error(err);
       return;
     }
   
     console.log(content);
-  });
+  });*/
   
 });
 
