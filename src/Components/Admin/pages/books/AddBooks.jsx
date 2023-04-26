@@ -51,9 +51,6 @@ const useStyles = makeStyles((theme) => ({
     formControl: {
       minWidth: "120px",
     },
-    selectEmpty: {
-      marginTop: "10px",
-    },
   }));
 
   const AddBookSchema = Yup.object().shape({
@@ -66,7 +63,7 @@ const AddBooks = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const classes = useStyles();
     const history = useHistory();
-    const [category, setCategory] = useState("");
+    const [categories, setCategories] = useState([]);
     const [image, setImage] = useState(null);
     const { isLoading, error, mutate } = useMutation(createBook);
 
@@ -96,7 +93,7 @@ const AddBooks = () => {
             author: values.author,
             description: values.description,
             image: imageUrl,
-            category,
+            categories,
         };
         mutate(book, {
             onSuccess: () => history.push("/books"),
@@ -193,25 +190,58 @@ const AddBooks = () => {
                                 }
                                 helperText={formik.touched.description && formik.errors.description}
                             />
-                            <FormControl variant="outlined" className="w-full">
-                                <InputLabel id="category-label">Category</InputLabel>
+                            <label htmlFor="categoryInput" className="text-gray-700 font-medium mb-2 block">
+                                Category
+                            </label>
+                            <FormControl variant="outlined"
+                                sx={{
+                                    marginTop: '10px'
+                                }}
+                                fullWidth
+                            >
+                                <InputLabel id="categories-label">Category</InputLabel>
                                 <Select
-                                    labelId="category-label"
-                                    id="category"
+                                    labelId="categories-label"
+                                    id="categories"
                                     variant="outlined"
                                     fullWidth
                                     margin="normal"
-                                    value={category}
-                                    onChange={(e) => setCategory(e.target.value)}
+                                    value={categories}
+                                    onChange={(e) => setCategories(e.target.value)}
                                     label="Category"
-                                    className={classes.selectEmpty}
+                                    multiple
                                 >
-                                    <MenuItem value="">
-                                    <em>None</em>
-                                    </MenuItem>
-                                    <MenuItem value="fiction">Fiction</MenuItem>
-                                    <MenuItem value="non-fiction">Non-Fiction</MenuItem>
-                                    <MenuItem value="memoir">Memoir</MenuItem>
+                                    <MenuItem value="disabled" disabled>--------------------------- School Categories ---------------------------</MenuItem>
+                                    <MenuItem value="Accounting and financial management">Accounting and financial management</MenuItem>
+                                    <MenuItem value="Computer programming and software development">Computer programming and software development</MenuItem>
+                                    <MenuItem value="Information systems and technology">Information systems and technology</MenuItem>
+                                    <MenuItem value="Database management and design">Database management and design</MenuItem>
+                                    <MenuItem value="Networking and security">Networking and security</MenuItem>
+                                    <MenuItem value="Web development and design">Web development and design</MenuItem>
+                                    <MenuItem value="Business and entrepreneurship">Business and entrepreneurship</MenuItem>
+                                    <MenuItem value="Project management">Project management</MenuItem>
+                                    <MenuItem value="Statistics and data analysis">Statistics and data analysis</MenuItem>
+                                    <MenuItem value="Mathematics for computer science.">Mathematics for computer science.</MenuItem>
+                                    <MenuItem value="disabled" disabled>--------------------------- Extra Categories ---------------------------</MenuItem>
+                                    <MenuItem value="Fiction">Fiction</MenuItem>
+                                    <MenuItem value="Non-fiction">Non-fiction</MenuItem>
+                                    <MenuItem value="Romance">Romance</MenuItem>
+                                    <MenuItem value="Mystery/Thriller">Mystery/Thriller</MenuItem>
+                                    <MenuItem value="Science Fiction/Fantasy">Science Fiction/Fantasy</MenuItem>
+                                    <MenuItem value="Biography/Autobiography">Biography/Autobiography</MenuItem>
+                                    <MenuItem value="History">History</MenuItem>
+                                    <MenuItem value="Horror">Horror</MenuItem>
+                                    <MenuItem value="Self-help/Personal Development">Self-help/Personal Development</MenuItem>
+                                    <MenuItem value="Business/Finance">Business/Finance</MenuItem>
+                                    <MenuItem value="Travel">Travel</MenuItem>
+                                    <MenuItem value="Poetry">Poetry</MenuItem>
+                                    <MenuItem value="Humor">Humor</MenuItem>
+                                    <MenuItem value="Religious/Spiritual">Religious/Spiritual</MenuItem>
+                                    <MenuItem value="Art/Photography">Art/Photography</MenuItem>
+                                    <MenuItem value="Cookbooks/Food">Cookbooks/Food</MenuItem>
+                                    <MenuItem value="Sports/Fitness">Sports/Fitness</MenuItem>
+                                    <MenuItem value="Science/Technology">Science/Technology</MenuItem>
+                                    <MenuItem value="Education/Teaching">Education/Teaching</MenuItem>
                                 </Select>
                             </FormControl>
                             <label htmlFor="imageInput" className="text-gray-700 font-medium mb-2 block mt-6">

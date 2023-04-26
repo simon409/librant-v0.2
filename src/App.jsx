@@ -24,6 +24,8 @@ import AddDocs from './Components/Admin/pages/docs/AddDocs';
 import Books from './Components/books/Books';
 import ShowBook from './Components/books/showbook';
 import ShowDocsUser from './Components/books/docs/ShowDocs';
+import ModifyBook from './Components/Admin/pages/books/ModifyBook';
+import ShowBookByCategory from './Components/books/showbookbycategory';
 
 
 function App() {
@@ -39,6 +41,7 @@ function App() {
       {/*books admin stuff */}
       <Route exact path="/showbooks" component={ShowBooks} />
       <Route exact path="/books/category" component={ShowCategory} />
+      <Route exact path="/books/modify/:id" component={ModifyBook} />
       <Route exact path="/books/addbook" component={AddBooks} />
 
       {/*docs admin stuff */}
@@ -50,6 +53,7 @@ function App() {
       <Route exact path="/books" component={Books} />
       <Route exact path="/books/:id" component={ShowBook} />
       <Route exact path="/docs/:id" component={ShowDocsUser} />
+      <Route exact path="/genres/:category" component={ShowBookByCategory} />
 
       {/*404 page */}
       <Route exact path="/404" component={Error} />

@@ -271,7 +271,7 @@ const NavBar = () => {
           </div>
       </div>
       <React.Fragment>
-        <AppBar elevation={pathname.includes('books') ? 0 : 4} sx={{background: '#fff', position: 'fixed', zIndex: '998'}}>
+        <AppBar elevation={pathname.includes('books') || pathname.includes('genres') ? 0 : 4} sx={{background: '#fff', position: 'fixed', zIndex: '998'}}>
           <Toolbar>
           <Box
           sx={{

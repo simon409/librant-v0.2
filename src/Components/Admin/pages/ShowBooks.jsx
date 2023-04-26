@@ -12,7 +12,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { getDatabase, onValue, ref } from 'firebase/database';
+import { Button } from '@mui/material';
+import { getDatabase, onValue, ref, remove } from 'firebase/database';
+import { getStorage, ref as storageRef, deleteObject } from 'firebase/storage';
 
 function ShowBooks() {
 
@@ -50,6 +52,15 @@ function ShowBooks() {
       image: book.image, // assuming imageUrl is a property of the book object
     };
   }
+
+  const handleDeleteBook = async ({id, imageUrl}) => {
+    const db = getDatabase();
+    const bookRef = ref(db, `books/${id}`);
+    await remove(bookRef);
+    const storage = getStorage();
+    const pictureRef = storageRef(storage, imageUrl);
+    await deleteObject(pictureRef);
+  };
   
   const rows = books.map((book) => createData(book));
 
@@ -96,8 +107,28 @@ function ShowBooks() {
                       <TableCell align="left">{`${row.description.substring(0, Math.min(row.description.indexOf('\n') !== -1 ? row.description.indexOf('\n') : 90, 90))}...`}</TableCell>
                       <TableCell align="left">
                         <div className="flex gap-3">
-                          <Link to="/books/modify/:id" className='p-2 bg-mypalette-1 rounded-lg text-white font-bold'>Modify</Link>
-                          <Link to="/books/delete/:id" className='p-2 bg-[#DB4C3F] rounded-lg text-white font-bold'>Delete</Link>
+                          <Link to={`/books/modify/${row.id}`} className='p-2 bg-mypalette-1 rounded-lg text-white font-bold'>Modify</Link>
+                          <Button 
+                          sx={{
+                            padding: '8px',
+                            backgroundColor: 'red',
+                            borderRadius: '8px',
+                            color: '#fff',
+                            fontWeight: 'bold',
+                            "&:hover": {
+                              backgroundColor: '#DB4C3F',
+                              color: 'white',
+                            },
+                          }}
+                          onClick={() => {
+                            if (window.confirm('Are you sure you want to delete this book?')) {
+                              handleDeleteBook({
+                                id: row.id,
+                                imageUrl: row.image
+                              })
+                            }
+                          }}
+                          >Delete</Button>
                         </div>
                       </TableCell>
                     </TableRow>

@@ -76,7 +76,6 @@ function ShowBook() {
           setBook(data);
         });
     };
-
     // Fetch book on mount or when id changes
     fetchBook();
 
@@ -156,7 +155,15 @@ function ShowBook() {
             <h1 className="text-3xl font-bold text-gray-800">{book.title}</h1>
             <h2 className="text-2xl text-gray-500">{book.author}</h2>
             <p className="mt-4 text-lg leading-7 text-gray-700">{book.description}</p>
-            <p className="mt-4 text-md leading-4 text-gray-700">Genre: Mystery, Action</p>
+            <p className="mt-4 text-md leading-4 text-gray-700">
+              Genre: {book.categories.map((category, index) => (
+                <React.Fragment key={category}>
+                  <a href={`/genres/${encodeURIComponent(category)}`} className='inline text-mypalette-2 hover:underline'>{category}</a>
+                  {index !== book.categories.length - 1 && ', '}
+                  {index === book.categories.length - 1 && '.'}
+                </React.Fragment>
+              ))}
+            </p>
             <div className="flex gap-4 mt-6">
               <button className="px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200">Borrow it</button>
               <button className="px-6 py-2 bg-gray-200 text-blue-600 text-bold rounded-md shadow-md hover:bg-gray-300 transition duration-200">Buy it</button>

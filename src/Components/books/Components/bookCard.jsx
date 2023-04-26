@@ -235,7 +235,7 @@ const BookCard = ({ id, title, author, description, image }) => {
     }
 
     setplaylistsnamesAsync();
-  }, [id]);
+  }, [id, showplaylist]);
 
 
   useEffect(() => {
@@ -254,7 +254,7 @@ const BookCard = ({ id, title, author, description, image }) => {
         }
       });
     }
-  }, [id]);
+  }, [id, showplaylist]);
   
 
   const handleFavoriteClick = () => {
@@ -317,10 +317,10 @@ const BookCard = ({ id, title, author, description, image }) => {
         </div>
         <CardContent>
           <Typography variant="h5" color="textprimary" component="p" className=" text-mypalette-2 mb-4 text-xl">
-            {title}
+            {`${title.substring(0, Math.min(title.indexOf('\n') !== -1 ? title.indexOf('\n') : 25, 25))}...`}
           </Typography>
           <Typography variant="subtitle1" color="textSecondary" component="p" className="text-teal-500 mb-4">
-            {author}
+            {`${author.substring(0, Math.min(author.indexOf('\n') !== -1 ? author.indexOf('\n') : 25, 25))}...`}
           </Typography>
           <Typography variant="body2" component="p" className="text-gray-700">
             {`${description.substring(0, Math.min(description.indexOf('\n') !== -1 ? description.indexOf('\n') : 90, 90))}...`}

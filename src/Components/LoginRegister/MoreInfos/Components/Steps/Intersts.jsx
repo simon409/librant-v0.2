@@ -2,15 +2,19 @@ import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const interestsData = [
-  { id: '1', label: 'Drama', icon: '🎭' },
-  { id: '2', label: 'Romance', icon: '💕' },
-  { id: '3', label: 'Horror', icon: '👻' },
-  { id: '4', label: 'Comedy', icon: '😂' },
-  { id: '5', label: 'Action', icon: '💥' },
-  { id: '6', label: 'Sci-fi', icon: '👽' },
-  { id: '7', label: 'Mystery', icon: '🔍' },
-  { id: '8', label: 'Fantasy', icon: '🧚' },
+  { id: '1', label: 'Computer Programming', icon: '💻' },
+  { id: '2', label: 'Web Development', icon: '🌐' },
+  { id: '3', label: 'Database Management', icon: '🗃️' },
+  { id: '4', label: 'Network Security', icon: '🔒' },
+  { id: '5', label: 'Business and Entrepreneurship', icon: '💼' },
+  { id: '6', label: 'Project Management', icon: '📈' },
+  { id: '7', label: 'Statistics and Data Analysis', icon: '📊' },
+  { id: '8', label: 'Electronics', icon: '🔌' },
+  { id: '9', label: 'Mathematics', icon: '➕' },
+  { id: '10', label: 'Artificial Intelligence', icon: '🤖' },
 ];
+
+
 
 const Intersts = (props) => {
 
