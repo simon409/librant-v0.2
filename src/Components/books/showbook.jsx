@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import NavBar from "../NavBar/NavBar"
 import { useParams } from 'react-router-dom';
-import { getDatabase, ref, onValue, set } from "firebase/database";
-import { Book, CloseSharp } from '@mui/icons-material';
+import { getDatabase, ref, onValue, set, update, push, get } from "firebase/database";
+import { CloseSharp } from '@mui/icons-material';
 import BookCard from './Components/bookCard';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { LinearProgress, IconButton } from '@mui/material';
 import { Favorite, FavoriteBorder } from '@mui/icons-material';
 import { auth } from '../../firebase';
@@ -35,6 +34,7 @@ function BorrowOverlay({idBook, onClose}){
    const [Confirm, setConfirm] = useState(false);
    const [Borrowed, setBorrowed] = useState(false)
    const [DateEmprint, setDateEmprint] = useState(new Date());
+   const [Error, setError] = useState(null);
    useEffect(() => {
      const fetchBook = async () => {
          // User is signed in, fetch user data
@@ -53,10 +53,44 @@ function BorrowOverlay({idBook, onClose}){
      return fetchBook;
    }, [idBook]);
 
-   const HandelBorrow = () => {
-
-    setBorrowed(true);
-   }
+   const HandelBorrow = async () => {
+    try {
+      const user = auth.currentUser;
+      const bookRef = ref(getDatabase(), `books/${idBook}`);
+      const bookSnap = await get(bookRef);
+      const Book = bookSnap.val();
+  
+      // Check if user already has this book in borrows
+      const userBorrowsRef = ref(getDatabase(), `users/${user.uid}/borrows`);
+      const borrowsSnap = await get(userBorrowsRef);
+      const borrowsData = borrowsSnap.val();
+      const existingBorrow = Object.values(borrowsData || {}).find(
+        (borrow) => borrow.Book_id === idBook
+      );
+  
+      if (existingBorrow) {
+        setError("You already have this book");
+        return;
+      }
+  
+      // Add borrows to user tables
+      const returnDate = new Date(DateEmprint);
+      returnDate.setDate(returnDate.getDate() + 14); // assuming a 14-day borrowing period
+      const newBorrowRef = push(userBorrowsRef); // create a new reference for the new object
+      await update(newBorrowRef, {
+        Book_id: idBook,
+        borrowdate: DateEmprint,
+        return_date: returnDate,
+      });
+  
+      // Updating book quantity
+      await update(bookRef, { Quantity: Book.Quantity - 1 });
+      setBorrowed(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   return(
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0" style={{ backdropFilter: 'blur(10px)' }} onClick={onClose} />
@@ -91,16 +125,24 @@ function BorrowOverlay({idBook, onClose}){
             <button onClick={() => setConfirm(true)} className="px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200">Borrow it</button>
           </div>
           {
-            !Borrowed ? (Confirm ? (<div className=' bg-slate-300 mt-5 p-4 rounded-lg'>
-              Do you confirm your borrow?
-              <div className="relative mt-5 flex gap-5">
-                <button onClick={HandelBorrow} className="px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200">Yes</button>
-                <button onClick={onClose} className="px-6 py-2 bg-red-500 text-white text-bold rounded-md shadow-md hover:bg-red-600 transition duration-200">No</button>
-              </div>
-            </div>) : (<></>)) : (
-              <div className=' bg-green-200 mt-5 p-4 rounded-lg'>
-                <h1 className="text-green-600">
-                  You have borroed this book with <b>success</b>
+            Error==null ? (
+              !Borrowed ? (Confirm ? (<div className=' bg-slate-300 mt-5 p-4 rounded-lg'>
+                Do you confirm your borrow?
+                <div className="relative mt-5 flex gap-5">
+                  <button onClick={HandelBorrow} className="px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200">Yes</button>
+                  <button onClick={onClose} className="px-6 py-2 bg-red-500 text-white text-bold rounded-md shadow-md hover:bg-red-600 transition duration-200">No</button>
+                </div>
+              </div>) : (<></>)) : (
+                <div className=' bg-green-200 mt-5 p-4 rounded-lg'>
+                  <h1 className="text-green-600">
+                    You have borroed this book with <b>success</b>
+                  </h1>
+                </div>
+              )
+            ) : (
+              <div className=' bg-red-200 mt-5 p-4 rounded-lg'>
+                <h1 className="text-red-600">
+                  {Error}
                 </h1>
               </div>
             )
@@ -116,7 +158,7 @@ function ShowBook() {
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [showOverlay, setShowOverlay] = useState(false);
-  const [showBorrowOverlay, setShowBorrowOverlay] = useState(true);
+  const [showBorrowOverlay, setShowBorrowOverlay] = useState(false);
   const [loading, setloading] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const history = useHistory();
