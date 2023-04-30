@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import NavBar from "../NavBar/NavBar"
 import { useParams } from 'react-router-dom';
 import { getDatabase, ref, onValue, set } from "firebase/database";
-import { CloseSharp } from '@mui/icons-material';
+import { Book, CloseSharp } from '@mui/icons-material';
 import BookCard from './Components/bookCard';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { LinearProgress, IconButton } from '@mui/material';
@@ -29,42 +29,100 @@ function ImageOverlay({ imageUrl, onClose }) {
   );
 }
 
+function BorrowOverlay({idBook, onClose}){
+   //this check for the user and show his infos
+   const [Book, setBook] = useState(null);
+   const [Confirm, setConfirm] = useState(false);
+   const [Borrowed, setBorrowed] = useState(false)
+   const [DateEmprint, setDateEmprint] = useState(new Date());
+   useEffect(() => {
+     const fetchBook = async () => {
+         // User is signed in, fetch user data
+         const db = getDatabase();
+         const userDataRef = ref(db, `books/${idBook}`);
+         onValue(userDataRef, (snapshot) => {
+           const data = snapshot.val();
+           setBook(data);
+           console.log(data)
+         });
+     };
+     // Fetch book on mount or when id changes
+     fetchBook();
+ 
+     // Unsubscribe from the listener when the component is unmounted
+     return fetchBook;
+   }, [idBook]);
+
+   const HandelBorrow = () => {
+
+    setBorrowed(true);
+   }
+  return(
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0" style={{ backdropFilter: 'blur(10px)' }} onClick={onClose} />
+      <div className="absolute w-full p-4 container">
+        <div className="relative min-h-fit left-1/2 -translate-x-1/2 max-w-md bg-white rounded-lg p-4 border-mypalette-2 border-2 transition-all delay-150">
+          <div className="text-xl text-mypalette-2">
+            Book title: <p className='font-bold inline w-fit'>{Book ? Book.title : "Loading"}</p>
+          </div>
+          <div className='relative flex flex-col gap-5 top-1/2 w-full'>
+            <h1>Select date to get your book</h1>
+            <input 
+              type="date" 
+              required
+              className='outline-none w-full py-4 px-4 rounded-md border-2'  
+              autoComplete="off"
+              value={
+                DateEmprint.getFullYear().toString() +
+                "-" +
+                (DateEmprint.getMonth() + 1).toString().padStart(2, 0) +
+                "-" +
+                DateEmprint.getDate().toString().padStart(2, 0)
+              }
+              onChange={(e) => {
+                setDateEmprint(new Date(e.target.value));
+              }}
+              min={
+                new Date().toISOString().split('T')[0]
+              }
+            />
+          </div>
+          <div className="relative mt-5">
+            <button onClick={() => setConfirm(true)} className="px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200">Borrow it</button>
+          </div>
+          {
+            !Borrowed ? (Confirm ? (<div className=' bg-slate-300 mt-5 p-4 rounded-lg'>
+              Do you confirm your borrow?
+              <div className="relative mt-5 flex gap-5">
+                <button onClick={HandelBorrow} className="px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200">Yes</button>
+                <button onClick={onClose} className="px-6 py-2 bg-red-500 text-white text-bold rounded-md shadow-md hover:bg-red-600 transition duration-200">No</button>
+              </div>
+            </div>) : (<></>)) : (
+              <div className=' bg-green-200 mt-5 p-4 rounded-lg'>
+                <h1 className="text-green-600">
+                  You have borroed this book with <b>success</b>
+                </h1>
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  )
+}
+
 
 function ShowBook() {
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [showOverlay, setShowOverlay] = useState(false);
+  const [showBorrowOverlay, setShowBorrowOverlay] = useState(true);
   const [loading, setloading] = useState(false);
   const [isFavorited, setIsFavorited] = useState(false);
   const history = useHistory();
 
   //this check for the user and show his infos
   const [Books, setBooks] = useState([]);
-
-  useEffect(() => {
-    
-    const fetchBooks = async () => {
-      try {
-        if (true) {
-          // User is signed in, fetch user data
-          const db = getDatabase();
-          const bookRef = ref(db, `books`);
-          onValue(bookRef, (snapshot) => {
-            const data = snapshot.val();
-            const bookArray = Object.keys(data).map(key => ({
-              id: key,
-              ...data[key]
-            })).filter(book => book.id !== id).slice(0,5);
-            setBooks(bookArray);
-            setloading(false);
-          });
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchBooks();
-  }, []);
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -82,6 +140,34 @@ function ShowBook() {
     // Unsubscribe from the listener when the component is unmounted
     return fetchBook;
   }, [id]);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        if (true) {
+          // User is signed in, fetch user data
+          const db = getDatabase();
+          const bookRef = ref(db, "books");
+          onValue(bookRef, (snapshot) => {
+            const data = snapshot.val();
+            const bookArray = Object.keys(data).map(key => ({
+              id: key,
+              ...data[key],
+            })).filter(book => book.id !== id).slice(0,5);
+            /*book.categories.forEach((category) => {
+              console.log(category)
+              const filteredBooks = bookArray.filter(book => book.categories.includes(category));
+              setBooks(filteredBooks);
+            });*/
+            setBooks(bookArray);
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchBooks();
+  }, []);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user)=>{
@@ -117,6 +203,13 @@ function ShowBook() {
     setShowOverlay(!showOverlay);
   };
 
+  const toggleBorrowOverlay = () => {
+    if(book.Quantity>0)
+    {
+      setShowBorrowOverlay(!showBorrowOverlay);
+    }
+  }
+
   if (!book) {
     return <div>Loading...</div>;
   }
@@ -124,7 +217,7 @@ function ShowBook() {
   return (
     <>
       <NavBar />
-      <div className='mt-16 p-4'>
+      <div className=' mt-14 p-4'>
         <div className="flex flex-col md:flex-row md:gap-8">
           <div className="rounded-lg shadow-lg overflow-hidden w-full md:w-1/3">
             <div className="relative">
@@ -149,6 +242,10 @@ function ShowBook() {
               {showOverlay && 
                 <ImageOverlay imageUrl={book.image} onClose={() => setShowOverlay(false)}/>
               }
+              {
+                showBorrowOverlay &&
+                <BorrowOverlay idBook={id} onClose={() => setShowBorrowOverlay(false)}/>
+              }
             </div>
           </div>
           <div className="flex flex-col justify-center w-full md:w-2/3">
@@ -164,8 +261,10 @@ function ShowBook() {
                 </React.Fragment>
               ))}
             </p>
+            <p className={book.Quantity ? "mt-4 text-lg leading-7 text-gray-700 w-fit py-1 px-2 rounded-lg text-white bg-green-500" : 
+            "mt-4 text-lg leading-7 text-gray-700 w-fit py-1 px-2 rounded-lg text-white bg-red-500"}>{book.Quantity > 0 ? "Available" : "Not Available"}</p>
             <div className="flex gap-4 mt-6">
-              <button className="px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200">Borrow it</button>
+              <button onClick={() => setShowBorrowOverlay(true)} className="px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200">Borrow it</button>
               <button className="px-6 py-2 bg-gray-200 text-blue-600 text-bold rounded-md shadow-md hover:bg-gray-300 transition duration-200">Buy it</button>
             </div>
           </div>
