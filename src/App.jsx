@@ -27,6 +27,9 @@ import ShowDocsUser from './Components/books/docs/ShowDocs';
 import ModifyBook from './Components/Admin/pages/books/ModifyBook';
 import ShowBookByCategory from './Components/books/showbookbycategory';
 
+//user stuff
+import Profile from './Components/user/Profile';
+
 
 function App() {
   return (
@@ -37,6 +40,7 @@ function App() {
       <Route exact path="/moreinfos" component={MoreInfos} />
       <Route exact path="/forgotpassword" component={ForgotPass} />
       <Route exact path="/dashboard" component={Dashboard} />
+      <Route exact path="/profile" component={Profile} />
 
       {/*books admin stuff */}
       <Route exact path="/showbooks" component={ShowBooks} />

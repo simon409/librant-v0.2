@@ -11,6 +11,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const trigger = useRef(null);
   const sidebar = useRef(null);
 
+  const [hovered, sethovered] = useState(false)
+
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
   const [sidebarExpanded, setSidebarExpanded] = useState(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true');
 
@@ -58,9 +60,11 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       <div
         id="sidebar"
         ref={sidebar}
-        className={`flex flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 lg:w-20 lg:sidebar-expanded:!w-64 2xl:!w-64 shrink-0 bg-slate-100 p-4 transition-all duration-200 ease-in-out ${
+        onMouseOver={() => sethovered(true)}
+        onMouseLeave={() => sethovered(false)}
+        className={`flex flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 lg:sidebar-expanded:!w-64 2xl:!w-64 shrink-0 bg-slate-100 p-4 transition-all duration-200 ease-in-out ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-64'
-        }`}
+        } ${hovered ? 'lg:w-64' : 'lg:w-20'}`}
       >
         {/* Sidebar header */}
         <div className="flex justify-between mb-10 pr-3 sm:px-2">
@@ -89,10 +93,10 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           {/* Pages group */}
           <div>
             <h3 className="text-xs uppercase text-slate-800 font-semibold pl-3">
-              <span className="hidden lg:block lg:sidebar-expanded:hidden 2xl:hidden text-center w-6" aria-hidden="true">
-                •••
-              </span>
-              <span className="lg:hidden lg:sidebar-expanded:block 2xl:block">Pages</span>
+                <span className={`hidden lg:block lg:sidebar-expanded:hidden 2xl:hidden text-center w-6 ${hovered ? 'lg:hidden' : 'lg:block'}`} aria-hidden="true">
+                  •••
+                </span>
+              <span className={`lg:sidebar-expanded:block 2xl:block ${hovered ? 'lg:block' : 'lg:hidden'}`}>Pages</span>
             </h3>
             <ul className="mt-3">
               {/* Messages */}
@@ -126,7 +130,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                           d="M12 15c-1.654 0-3-1.346-3-3 0-.462.113-.894.3-1.285L6 6l4.714 3.301A2.973 2.973 0 0112 9c1.654 0 3 1.346 3 3s-1.346 3-3 3z"
                         />
                       </svg>
-                      <span className="text-sm text-black font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                      <span className={`text-sm text-black font-medium ml-3 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${hovered ? 'lg:opacity-100' : 'lg:opacity-0'}`}>
                         Dashboard
                       </span>
                     </div>
@@ -163,7 +167,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                               <path className={`fill-current ${pathname.includes('showbooks') ? 'text-indigo-600' : 'text-slate-700'}`} d="M12.48,14s.251.124.66-.3a2.291,2.291,0,0,0,.528-1.024s.239-1.057.5-1.057.5.693.5.693a4.079,4.079,0,0,0,.462,1.222c.3.421.429.462.429.462v.924s-2.08.66-2.179.693A11.1,11.1,0,0,1,12.48,14Z"/>
                               </g>
                           </svg>
-                            <span className="text-sm text-black font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                            <span className={`text-sm text-black font-medium ml-3 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${hovered ? 'lg:opacity-100' : 'lg:opacity-0'}`}>
                               Books
                             </span>
                           </div>
@@ -175,7 +179,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                           </div>
                         </div>
                       </a>
-                      <div className="lg:hidden lg:sidebar-expanded:block 2xl:block">
+                      <div className={`lg:sidebar-expanded:block 2xl:block ${hovered ? 'lg:opacity-100' : 'lg:opacity-0'}`}>
                         <ul className={`pl-9 mt-1 ${!open && 'hidden'}`}>
                           <li className="mb-1 last:mb-0">
                             <NavLink
@@ -185,7 +189,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                 'block transition duration-150 truncate ' + (isActive ? 'text-indigo-500' : 'text-slate-400 hover:text-slate-200')
                               }
                             >
-                              <span className="text-sm text-black font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                              <span className={`text-sm text-black font-medium lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${hovered ? 'lg:opacity-100' : 'lg:opacity-0'}`}>
                                 Show Books
                               </span>
                             </NavLink>
@@ -198,7 +202,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                 'block transition duration-150 truncate ' + (isActive ? 'text-indigo-500' : 'text-slate-400 hover:text-slate-200')
                               }
                             >
-                              <span className="text-sm text-black font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                              <span className={`text-sm text-black font-medium lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${hovered ? 'lg:opacity-100' : 'lg:opacity-0'}`}>
                                 Show Categories
                               </span>
                             </NavLink>
@@ -233,7 +237,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                           <path id="Icon_awesome-bars" data-name="Icon awesome-bars" d="M.276,5.462H7.458a.276.276,0,0,0,.276-.276V4.495a.276.276,0,0,0-.276-.276H.276A.276.276,0,0,0,0,4.495v.691A.276.276,0,0,0,.276,5.462Zm0,2.762H7.458a.276.276,0,0,0,.276-.276V7.257a.276.276,0,0,0-.276-.276H.276A.276.276,0,0,0,0,7.257v.691A.276.276,0,0,0,.276,8.224Zm0,2.762H7.458a.276.276,0,0,0,.276-.276v-.691a.276.276,0,0,0-.276-.276H.276A.276.276,0,0,0,0,10.019v.691A.276.276,0,0,0,.276,10.986Z" transform="translate(4.738 4.995)" fill="#fff"/>
                             
                           </svg>
-                            <span className="text-sm text-black font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                            <span className={`text-sm text-black font-medium ml-3 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${hovered ? 'lg:opacity-100' : 'lg:opacity-0'}`}>
                               Documents
                             </span>
                           </div>
@@ -245,7 +249,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                           </div>
                         </div>
                       </a>
-                      <div className="lg:hidden lg:sidebar-expanded:block 2xl:block">
+                      <div className={`lg:sidebar-expanded:block 2xl:block ${hovered ? 'lg:opacity-100' : 'lg:opacity-0'}`}>
                         <ul className={`pl-9 mt-1 ${!open && 'hidden'}`}>
                           <li className="mb-1 last:mb-0">
                             <NavLink
@@ -255,7 +259,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                 'block transition duration-150 truncate ' + (isActive ? 'text-indigo-500' : 'text-slate-400 hover:text-slate-200')
                               }
                             >
-                              <span className="text-sm text-black font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                              <span className={`text-sm text-black font-medium lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${hovered ? 'lg:opacity-100' : 'lg:opacity-0'}`}>
                                 Show Documents
                               </span>
                             </NavLink>
@@ -268,7 +272,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                                 'block transition duration-150 truncate ' + (isActive ? 'text-indigo-500' : 'text-slate-400 hover:text-slate-200')
                               }
                             >
-                              <span className="text-sm text-black font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                              <span className={`text-sm text-black font-medium lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${hovered ? 'lg:opacity-100' : 'lg:opacity-0'}`}>
                                 Show Categories
                               </span>
                             </NavLink>
@@ -300,7 +304,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                           d="M11 1C5.477 1 1 4.582 1 9c0 1.797.75 3.45 2 4.785V19l4.833-2.416C8.829 16.85 9.892 17 11 17c5.523 0 10-3.582 10-8s-4.477-8-10-8z"
                         />
                       </svg>
-                      <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                      <span className={`text-sm text-black font-medium ml-3 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${hovered ? 'lg:opacity-100' : 'lg:opacity-0'}`}>
                         Messages
                       </span>
                     </div>
@@ -329,7 +333,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                         d="M21 3h2v4H1V3h2V1h4v2h10V1h4v2Z"
                       />
                     </svg>
-                    <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                    <span className={`text-sm text-black font-medium ml-3 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${hovered ? 'lg:opacity-100' : 'lg:opacity-0'}`}>
                       Calendar
                     </span>
                   </div>

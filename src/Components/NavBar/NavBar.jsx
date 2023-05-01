@@ -495,7 +495,9 @@ const NavBar = () => {
                         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                       >
                         <MenuItem onClick={handleClose}>
-                          <Avatar /> {user.fullname}
+                          <Link to="/profile" className="flex">
+                            <Avatar /> <p className="my-auto">{user.fullname}</p>
+                          </Link>
                         </MenuItem>
                         {
                           user.role === 'admin' ? (
