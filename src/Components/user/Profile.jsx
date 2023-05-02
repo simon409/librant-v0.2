@@ -126,7 +126,7 @@ export default function Profile() {
           <div className='shadow-md'>
             <div className="w-full h-[300px] bg-gradient-to-r from-mypalette-1 to-mypalette-2 rounded-t-lg">
               <div className="relative">
-                <div className="absolute -bottom-96 left-16">
+                <div className="absolute -bottom-96 lg:left-16 left-20">
                   <Avatar
                     sx={{
                       width: '200px',
@@ -144,16 +144,17 @@ export default function Profile() {
             <div>
               <div className="flex flex-col gap-2 pt-20 bg-white py-4 px-14 rounded-b-lg">
                 <div id="name">
-                  <h1 className="text-3xl font-bold">
+                  <h1 className="text-3xl font-bold text-center md:text-start">
                     Mohamed Addar
                   </h1>
-                  <h1 className="text-xl text-slate-400">
+                  <h1 className="text-xl text-slate-400 text-center md:text-start">
                     Ingenieurie des systems Informatiques
                   </h1>
                 </div>
               </div>
             </div>
           </div>
+          {/*borrowed books */}
           <div>
             <div className='shadow-md'>
               <div className="flex flex-col gap-2 pt-5 bg-white py-4 px-14 rounded-b-lg">
@@ -163,12 +164,12 @@ export default function Profile() {
                   </h1>
                   <ul>
                   <div className="">
-                    <TransitionGroup className="book-listgrid grid-cols-1 gap-2 mt-4">
+                    <TransitionGroup className="book-listgrid grid-cols-1 mt-4">
                       {!Loading ? Books ? Books.map((book) => (
                         //key={book.id} 
                         <CSSTransition timeout={500} classNames="book">
-                          <li className=' flex list-none mx-auto book-item relative transition-transform delay-150 ease-linear shadow-md'>
-                            <a href={`/books/${book.id}`} key={book.id} className="flex justify-between w-full items-center p-4 rounded-lg shadow-md">
+                          <li className='mb-3 flex list-none mx-auto book-item relative transition-transform delay-150 ease-linear'>
+                            <div key={book.id} className="flex justify-between w-full items-center p-4 rounded-lg border-mypalette-4 border-2">
                               <div className='flex'>
                                 <img src={book.image} alt={book.title} className="w-16 h-16 rounded-md shadow-md mr-4" />
                                 <div>
@@ -181,6 +182,47 @@ export default function Profile() {
                                   {/*here i want to show the due date that is in borrows */}
                                 </div>
                                 <button className='px-4 py-2 bg-mypalette-4 rounded-lg text-white font-bold hover:bg-mypalette-5'>Return</button>
+                              </div>
+                            </div>
+                          </li>
+                        </CSSTransition>
+                      )) : (
+                        <div>No Borrowed Books</div>
+                      ) : (<>Loading</>)}
+                      </TransitionGroup>
+                  </div>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/*history */}
+          <div>
+            <div className='shadow-md'>
+              <div className="flex flex-col gap-2 pt-5 bg-white py-4 px-14 rounded-b-lg">
+                <div id="name">
+                  <h1 className="text-2xl font-bold">
+                    History
+                  </h1>
+                  <ul>
+                  <div className="">
+                    <TransitionGroup className="book-listgrid grid-cols-1 gap-2 mt-4">
+                      {!Loading ? Books ? Books.map((book) => (
+                        //key={book.id} 
+                        <CSSTransition timeout={500} classNames="book">
+                          <li className='mb-3 flex list-none mx-auto book-item relative transition-transform delay-150 ease-linear'>
+                            <a href={`/books/${book.id}`} key={book.id} className="flex justify-between w-full items-center p-4 rounded-lg border-mypalette-4 border-2">
+                              <div className='flex'>
+                                <img src={book.image} alt={book.title} className="w-16 h-16 rounded-md shadow-md mr-4" />
+                                <div>
+                                  <h2 className="text-lg font-medium">{book.title}</h2>
+                                  <h3 className="text-gray-500">{book.author}</h3>
+                                </div>
+                              </div>
+                              <div className="flex my-auto">
+                                <div>
+                                  {/*here i want to show the due date that is in borrows */}
+                                </div>
                               </div>
                             </a>
                           </li>

@@ -301,8 +301,8 @@ function ShowBook() {
                 </React.Fragment>
               ))}
             </p>
-            <p className={book.Quantity ? "mt-4 text-lg leading-7 text-gray-700 w-fit py-1 px-2 rounded-lg text-white bg-green-500" : 
-            "mt-4 text-lg leading-7 text-gray-700 w-fit py-1 px-2 rounded-lg text-white bg-red-500"}>{book.Quantity > 0 ? "Available" : "Not Available"}</p>
+            <p className={book.Quantity ? "mt-4 text-lg leading-7 w-fit py-1 px-2 rounded-lg text-white bg-green-500" : 
+            "mt-4 text-lg leading-7 w-fit py-1 px-2 rounded-lg text-white bg-red-500"}>{book.Quantity > 0 ? "Available" : "Not Available"}</p>
             <div className="flex gap-4 mt-6">
               <button disabled={book.Quantity == 0} onClick={() => setShowBorrowOverlay(true)} className={book.Quantity > 0 ? "px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200" : "px-6 py-2 bg-slate-500 text-white text-bold rounded-md shadow-md"}>Borrow it</button>
               <button className="px-6 py-2 bg-gray-200 text-blue-600 text-bold rounded-md shadow-md hover:bg-gray-300 transition duration-200">Buy it</button>
