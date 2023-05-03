@@ -32,6 +32,7 @@ export default function Register() {
             fullname: fullname,
             email: email,
             role: "simple",
+            imageUrl: "-",
             country: "-",
             city: "-",
             fieldStudy: "-",

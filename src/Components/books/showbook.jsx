@@ -1,13 +1,47 @@
 import React, { useEffect, useState, useRef } from 'react';
-import NavBar from "../NavBar/NavBar"
-import { useParams } from 'react-router-dom';
+import NavBar from "../NavBar/NavBar";
+import { emphasize, styled, createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { useParams,useHistory } from 'react-router-dom';
 import { getDatabase, ref, onValue, set, update, push, get } from "firebase/database";
 import { CloseSharp } from '@mui/icons-material';
 import BookCard from './Components/bookCard';
-import { LinearProgress, IconButton } from '@mui/material';
-import { Favorite, FavoriteBorder } from '@mui/icons-material';
+import { LinearProgress, IconButton, Breadcrumbs, Chip } from '@mui/material';
+import { Favorite, FavoriteBorder, Home } from '@mui/icons-material';
 import { auth } from '../../firebase';
-import { useHistory } from 'react-router-dom';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
+const StyledBreadcrumb = styled(Chip)(({ theme }) => {
+  const backgroundColor =
+    theme.palette.mode === 'light'
+      ? theme.palette.grey[100]
+      : theme.palette.grey[800];
+  return {
+    backgroundColor,
+    height: theme.spacing(3),
+    color: theme.palette.text.primary,
+    fontWeight: theme.typography.fontWeightRegular,
+    '&:hover, &:focus': {
+      backgroundColor: emphasize(backgroundColor, 0.06),
+    },
+    '&:active': {
+      boxShadow: theme.shadows[1],
+      backgroundColor: emphasize(backgroundColor, 0.12),
+    },
+  };
+});
+
+function handleClick(num) {
+  switch(num){
+    case 0:
+      history.push("/");
+      break;
+    case 1:
+      history.push("/books");
+      break;
+    case 2:
+      break;
+  }
+}
 
 function ImageOverlay({ imageUrl, onClose }) {
   return (
@@ -90,7 +124,7 @@ function BorrowOverlay({idBook, onClose}){
       console.log(error);
     }
   };
-  
+
   return(
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0" style={{ backdropFilter: 'blur(10px)' }} onClick={onClose} />
@@ -159,8 +193,11 @@ function ShowBook() {
   const [showOverlay, setShowOverlay] = useState(false);
   const [showBorrowOverlay, setShowBorrowOverlay] = useState(false);
   const [loading, setloading] = useState(false);
+  const [readmore, setreadmore] = useState(false)
   const [isFavorited, setIsFavorited] = useState(false);
   const history = useHistory();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   //this check for the user and show his infos
   const [book, setBook] = useState(null);
@@ -258,10 +295,26 @@ function ShowBook() {
     <>
       <NavBar />
       <div className=' mt-14 p-4'>
+      <div role="presentation" onClick={handleClick} className="z-20 my-3">
+        <Breadcrumbs aria-label="breadcrumb">
+          <StyledBreadcrumb
+            component="a"
+            href="/"
+            onClick={()=>handleClick(0)}
+            label="Home"
+            icon={<Home fontSize="small" />}
+          />
+          <StyledBreadcrumb component="a" href="/books" onClick={()=>handleClick(1)} label="Books" />
+          <StyledBreadcrumb
+            label={matches ? book.title : `${book.title.substring(0, Math.min(book.title.indexOf('\n') !== -1 ? book.title.indexOf('\n') : 15, 15))}...`}
+            onClick={()=>handleClick(2)}
+          />
+        </Breadcrumbs>
+      </div>
         <div className="flex flex-col md:flex-row md:gap-8">
           <div className="rounded-lg shadow-lg overflow-hidden w-full md:w-1/3">
-            <div className="relative">
-              <img src={book.image} alt={book.title} className="w-full h-full object-cover max-h-96 max-w-full cursor-pointer" onClick={toggleOverlay} />
+            <div className="relative max-h-96">
+              <img src={book.image} alt={book.title} className="w-full h-full object-cover max-w-full cursor-pointer" onClick={toggleOverlay} />
               <div className="absolute top-2 right-2 z-10">
                 <div className="bg-white rounded-full p-2">
                   <IconButton 
@@ -289,9 +342,18 @@ function ShowBook() {
             </div>
           </div>
           <div className="flex flex-col justify-center w-full md:w-2/3">
-            <h1 className="text-3xl font-bold text-gray-800">{book.title}</h1>
+            <h1 className="text-3xl font-bold text-gray-800 mt-5 lg:mt-0">{book.title}</h1>
             <h2 className="text-2xl text-gray-500">{book.author}</h2>
-            <p className="mt-4 text-lg leading-7 text-gray-700">{book.description}</p>
+            <p className="mt-4 text-lg leading-7 text-gray-700">
+              {!matches ? (readmore ? book.description : `${book.description.substring(0, Math.min(book.description.indexOf('\n') !== -1 ? book.description.indexOf('\n') : 250, 250))}...`) : book.description}
+            </p>
+            {!matches && (
+              <p>
+                <button onClick={() => setreadmore(!readmore)} className="text-mypalette-2 mt-2 underline">
+                  {readmore ? "Read Less" : "Read More"}
+                </button>
+              </p>
+            )}
             <p className="mt-4 text-md leading-4 text-gray-700">
               Genre: {book.categories.map((category, index) => (
                 <React.Fragment key={category}>

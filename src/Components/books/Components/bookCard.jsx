@@ -23,6 +23,8 @@ function AddPlayList({idbook, onClose, playlisted, playlistedname}) {
   const [newP, setnewP] = useState(false);
   const [playlistname, setplaylistname] = useState('');
 
+
+
   console.log(playlistedname);
 
   useEffect(() => {
@@ -317,13 +319,13 @@ const BookCard = ({ id, title, author, description, image }) => {
         </div>
         <CardContent>
           <Typography variant="h5" color="textprimary" component="p" className=" text-mypalette-2 mb-4 text-xl">
-            {`${title.substring(0, Math.min(title.indexOf('\n') !== -1 ? title.indexOf('\n') : 25, 25))}...`}
+            {title ? `${title.substring(0, Math.min(title.indexOf('\n') !== -1 ? title.indexOf('\n') : 25, 25))}...` : `Loading...`}
           </Typography>
           <Typography variant="subtitle1" color="textSecondary" component="p" className="text-teal-500 mb-4">
-            {`${author.substring(0, Math.min(author.indexOf('\n') !== -1 ? author.indexOf('\n') : 25, 25))}...`}
+            {author ? `${author.substring(0, Math.min(author.indexOf('\n') !== -1 ? author.indexOf('\n') : 25, 25))}...` : 'Loading...'}
           </Typography>
           <Typography variant="body2" component="p" className="text-gray-700">
-            {`${description.substring(0, Math.min(description.indexOf('\n') !== -1 ? description.indexOf('\n') : 90, 90))}...`}
+            {description ? `${description.substring(0, Math.min(description.indexOf('\n') !== -1 ? description.indexOf('\n') : 90, 90))}...` : 'Loading...'}
           </Typography>
         </CardContent>
       </Card>

@@ -94,13 +94,15 @@ const NavBar = () => {
   }, []);
 
   const showSearchMenu = () => {
-    if(search === true){
+    if (search === true) {
       setsearch(false);
-    }
-    else{
+      document.body.style.overflow = "auto"; // enable scrolling
+    } else {
       setsearch(true);
+      document.body.style.overflow = "hidden"; // disable scrolling
     }
-  }
+  };
+  
 
   //this check for the user and show his infos
   const [user, setUser] = useState(null);
@@ -239,8 +241,8 @@ const NavBar = () => {
   
   return (
     <>
-      <div id="search-container" className={search ? "block z-50 absolute" : "hidden"}>
-          <div onClick={showSearchMenu} className="w-full h-full absolute">
+      <div id="search-container" className={search ? "block z-50 fixed" : "hidden"}>
+          <div onClick={showSearchMenu} className="w-full h-full absolute" style={{ backdropFilter: 'blur(10px)' }}>
 
           </div>
           <div className="relative top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-1/2 bg-white rounded-lg p-5">
@@ -457,7 +459,19 @@ const NavBar = () => {
                             aria-haspopup="true"
                             aria-expanded={open1 ? 'true' : undefined}
                           >
-                            <Avatar sx={{ width: 32, height: 32, backgroundColor: randomColor(user.fullname.charAt(0).toUpperCase()) }}>{user.fullname.charAt(0).toUpperCase()}</Avatar>
+                            {
+                                user.imageUrl != "-" ? (
+                                    <Avatar
+                                    src={user.imageUrl}
+                                    sx={{ width: 32, height: 32}}
+                                    />
+                                ) : (
+                                  <Avatar sx={{ width: 32, height: 32, backgroundColor: randomColor(user.fullname.charAt(0).toUpperCase()) }}>
+                                  {user.fullname.charAt(0).toUpperCase()}
+                                </Avatar>
+                                )
+                            }
+                            
                           </IconButton>
                         </Tooltip>
                       <Menu
@@ -496,7 +510,7 @@ const NavBar = () => {
                       >
                         <MenuItem onClick={handleClose}>
                           <Link to="/profile" className="flex">
-                            <Avatar /> <p className="my-auto">{user.fullname}</p>
+                            <Avatar src={user.imageUrl} sx={{ width: 32, height: 32}}/> <p className="my-auto">{user.fullname}</p>
                           </Link>
                         </MenuItem>
                         {

@@ -5,69 +5,10 @@ import { auth } from '../../firebase';
 import { getDatabase, onValue, ref } from 'firebase/database';
 import ProfileHeaderInfos from './Components/profileHeaderInfos';
 
-export default function Profile() {
+export default function Settings() {
   const [Books, setBooks] = useState([]);
   const [Loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
-
-  //incorrect code why ?
-  /*useEffect(() => {
-    setLoading(true);
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        // User is signed in, fetch user 
-        setuser(user);
-      } else {
-        // User is signed out
-        setuser(null);
-      }
-    });
-    // Unsubscribe from the listener when the component is unmounted
-    return unsubscribe;
-  }, []);
-
-  useEffect(() => {
-    if(user){
-      setUserLoading(false)
-    }
-  }, [user])
-  
-  
-
-  useEffect(() => {
-    if (user) {
-      console.log("entered useeffect");
-      const db = getDatabase();
-      const borrowsRef = ref(db, `users/${user.uid}/borrows`);
-      const booksRef = ref(db, `books`);
-      
-      const unsubscribeBorrows = onValue(borrowsRef, (snapshot) => {
-        const data = snapshot.val();
-        const borrows = [];
-        for (const key in data) {
-          borrows.push({ id: key, Book_id: data[key].Book_id });
-        }
-        console.log("setted borrows");
-        setBorrows(borrows);
-      });
-
-      const unsubscribeBooks = onValue(booksRef, (snapshot) => {
-        const data = snapshot.val();
-        const books = [];
-        for (const key in data) {
-          books.push({ id: key, ...data[key] });
-        }
-        setBooks(books.filter(book => borrows.some(borrow => borrow.Book_id === book.id)));
-        setLoading(false);
-        console.log("setted books and loading to false");
-      });
-
-      return () => {
-        unsubscribeBorrows();
-        unsubscribeBooks();
-      };
-    }
-  }, [UserLoading]);*/
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {

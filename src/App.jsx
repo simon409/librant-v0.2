@@ -29,6 +29,10 @@ import ShowBookByCategory from './Components/books/showbookbycategory';
 
 //user stuff
 import Profile from './Components/user/Profile';
+import History from './Components/user/History';
+import Playlists from './Components/user/Playlists';
+import LikedBooks from './Components/user/LikedBooks';
+import Settings from './Components/user/Settings';
 
 
 function App() {
@@ -41,6 +45,10 @@ function App() {
       <Route exact path="/forgotpassword" component={ForgotPass} />
       <Route exact path="/dashboard" component={Dashboard} />
       <Route exact path="/profile" component={Profile} />
+      <Route exact path="/profile/history" component={History} />
+      <Route exact path="/profile/playlists" component={Playlists} />
+      <Route exact path="/profile/likedbooks" component={LikedBooks} />
+      <Route exact path="/profile/settings" component={Settings} />
 
       {/*books admin stuff */}
       <Route exact path="/showbooks" component={ShowBooks} />

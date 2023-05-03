@@ -88,7 +88,7 @@ function DrawerComponent() {
         }}
       >
         <List sx={{
-          width: '250px',
+          width: '270px',
           padding: '0'
         }}>{user ? (
           <><div className="flex h-32">

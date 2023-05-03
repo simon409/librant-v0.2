@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../NavBar/NavBar";
-import {
-  FormControl,
-  TextField,
-  InputLabel,
-  Select,
-  MenuItem,
-} from "@mui/material";
+import { emphasize, styled } from '@mui/material/styles';
 import BookCard from "./Components/bookCard";
 import DocCard from "./Components/docCard";
 import {
@@ -23,10 +17,49 @@ import {
 } from "react-transition-group";
 import {
   LinearProgress,
-  Pagination
+  Pagination,
+  FormControl,
+  TextField,
+  InputLabel,
+  Select,
+  MenuItem,
+  Breadcrumbs,
+  Chip
 } from "@mui/material";
 import "./style/style.css";
 import { createCanvas } from "canvas";
+import { Home } from "@mui/icons-material";
+
+
+const StyledBreadcrumb = styled(Chip)(({ theme }) => {
+  const backgroundColor =
+    theme.palette.mode === 'light'
+      ? theme.palette.grey[100]
+      : theme.palette.grey[800];
+  return {
+    backgroundColor,
+    height: theme.spacing(3),
+    color: theme.palette.text.primary,
+    fontWeight: theme.typography.fontWeightRegular,
+    '&:hover, &:focus': {
+      backgroundColor: emphasize(backgroundColor, 0.06),
+    },
+    '&:active': {
+      boxShadow: theme.shadows[1],
+      backgroundColor: emphasize(backgroundColor, 0.12),
+    },
+  };
+});
+
+function handleClick(num) {
+  switch(num){
+    case 0:
+      history.push("/");
+      break;
+    case 1:
+      break;
+  }
+}
 
 export default function Books() {
   const [searchbook, setsearchbook] = useState("");
@@ -97,44 +130,56 @@ export default function Books() {
   <div>
     <NavBar />
       <div className="mt-20 mx-5">
+        <div role="presentation" onClick={handleClick} className="absolute top-28 left-14 z-20 -translate-y-1/2">
+          <Breadcrumbs aria-label="breadcrumb">
+            <StyledBreadcrumb
+              component="a"
+              href="/"
+              onClick={()=>handleClick(0)}
+              label="Home"
+              icon={<Home fontSize="small" />}
+            />
+            <StyledBreadcrumb component="a" href="/books" onClick={()=>handleClick(1)} label="Books" />
+          </Breadcrumbs>
+        </div>
         {/*Image ads*/}
         <div className="bg-blue-500 w-full h-96 rounded-lg">
           <img src="https://images.unsplash.com/photo-1596123068611-c89d922a0f0a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1438&q=80" className='object-cover h-full w-full rounded-lg bg-no-repeat bg-bottom brightness-75 relative' alt="imagetest" />
           <div id="search" className='absolute w-full top-1/3 left-1/2 z-20 text-white -translate-y-1/2 -translate-x-1/2 text-4xl text-center'>
             <h1>Find Your <b><u>{Type === "books" ? ('Book') : ('Document')}</u></b></h1>
-            <div className="flex justify-center gap-2">
+            <div className="absolute flex justify-center gap-2 lg:flex-row flex-col -translate-x-1/2 left-1/2">
               <FormControl sx={{background: '#fff', borderRadius: '5px', width: '300px', marginTop:'20px'}}>
-              <TextField
-              fullWidth 
-              type="text"
-              variant='outlined'
-              placeholder='Type to search for the book'
-              onChange={e=>handleSearch(e)}
-              />
-            </FormControl>
-            <FormControl  sx={{background: '#fff', borderRadius: '5px', width: '150px', marginTop:'20px'}}>
-              <Select
-                  labelId="category-label"
-                  id="category"
-                  variant="standard"
-                  fullWidth
-                  sx={{
-                    height: '100%'
-                  }}
-                  onChange={e => setType(e.target.value)}
-                  value={Type}
-                  margin="normal"
-                  label="Category"
-              >
-                  <MenuItem value="books">Books</MenuItem>
-                  <MenuItem value="docs">Documents</MenuItem>
-              </Select>
-            </FormControl>
+                <TextField
+                fullWidth 
+                type="text"
+                variant='outlined'
+                placeholder='Type to search for the book'
+                onChange={e=>handleSearch(e)}
+                />
+              </FormControl>
+              <FormControl  sx={{background: '#fff', borderRadius: '5px', width: 'full', marginTop:'20px'}}>
+                <Select
+                    labelId="category-label"
+                    id="category"
+                    variant="standard"
+                    fullWidth
+                    sx={{
+                      height: '100%'
+                    }}
+                    onChange={e => setType(e.target.value)}
+                    value={Type}
+                    margin="normal"
+                    label="Category"
+                >
+                    <MenuItem value="books">Books</MenuItem>
+                    <MenuItem value="docs">Documents</MenuItem>
+                </Select>
+              </FormControl>
           </div>
         </div>
       </div>
       {
-        Type === "Book" ? (
+        Type === "books" ? (
           <h1 className='text-center text-4xl mt-5 mb-5'>{searchbook != "" ? "Here some similar book relative to you search" : "Here are our books"}</h1>
         ) : (
           <h1 className='text-center text-4xl mt-5 mb-5'>{searchbook != "" ? "Here some similar documents relative to you search" : "Here are our documents"}</h1>
@@ -150,7 +195,7 @@ export default function Books() {
         ) : filteredBooks.length > 0 ? (
           <>
             <TransitionGroup className="book-list grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-1 gap-4">
-              {currentBooks.map((book) => (
+              {filteredBooks.map((book) => (
                 <CSSTransition key={book.id} timeout={500} classNames="book">
                   <li className='list-none mx-auto book-item relative transition-transform delay-150 ease-linear w-full'>
                     {
