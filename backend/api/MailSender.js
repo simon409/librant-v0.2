@@ -11,13 +11,7 @@ app.post('/send-email', (req, res) => {
 
   const transporter = nodemailer.createTransport({
     //mailing config
-    service: 'gmail',
-    host: 'smtp.gmail.com',
-    port: 587,
-    auth: {
-      user: 'librantlib@gmail.com',
-      pass: 'inbtljjzgdracuww',
-    },
+    
   });
 
   const mailOptions = {
