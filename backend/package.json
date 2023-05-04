@@ -1,0 +1,16 @@
+{
+  "name": "librant_backend",
+  "version": "1.0.0",
+  "description": "the backend librant",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "SIMON",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.1",
+    "cors": "^2.8.5"
+  }
+}
