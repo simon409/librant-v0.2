@@ -1,0 +1,32 @@
+#search-container{
+    background: linear-gradient(to bottom, rgba(49, 85, 248, 0.6), rgba(49, 85, 248, 0.6));
+    height: 100vh;
+    width: 100%;
+    z-index: 999;
+}
+
+/* CSS */
+
+/* Define the animation */
+.book-enter {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  
+  .book-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 500ms ease-out;
+  }
+  
+  .book-exit {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .book-exit-active {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 500ms ease-out;
+  }
+  
