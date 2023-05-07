@@ -101,7 +101,10 @@ function BorrowOverlay({idBook, onClose}){
       const existingBorrow = Object.values(borrowsData || {}).find(
         (borrow) => borrow.Book_id === idBook
       );
-  
+      if(Object.keys(borrowsData || {}).length >= 2){
+        setError("You have reached the maximum number of borrows, return books in order to borrow others.");
+        return;
+      }
       if (existingBorrow) {
         setError("You already have this book");
         return;

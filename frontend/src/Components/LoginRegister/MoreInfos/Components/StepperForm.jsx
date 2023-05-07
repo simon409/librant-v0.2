@@ -36,6 +36,7 @@ export default function StepperForm(){
 
   //interests
   const [selectedInterests, setSelectedInterests] = useState([]);
+  const [InterestsData, setInterestsData] = useState([]);
 
   const isStepOptional = (step) => {
     return step === 2;
@@ -82,14 +83,15 @@ export default function StepperForm(){
       case 1:
         return <ContactInfos phone={phone} setphone={setphone} address={address} setaddress={setaddress} address2={address2} setaddress2={setaddress2}/>
       case 2:
-        return <Intersts selectedInterests={selectedInterests} setSelectedInterests={setSelectedInterests}/>
+        return <Intersts selectedInterests={selectedInterests} setSelectedInterests={setSelectedInterests} setInterestsData={setInterestsData}/>
       default:
         throw new Error('Invalid step');
     }
   }
 
   const handleSubmit = () => {
-    alert('Please enter');
+    
+    console.log(InterestsData);
     try {
       auth.onAuthStateChanged(async user => {
         if (user) {
@@ -105,7 +107,7 @@ export default function StepperForm(){
         phone: phone,
         address: address,
         address2: address2,
-        interests: selectedInterests
+        interests: InterestsData
         });
       }
     }

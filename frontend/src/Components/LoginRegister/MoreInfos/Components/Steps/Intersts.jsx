@@ -1,40 +1,62 @@
 import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-const interestsData = [
-  { id: '1', label: 'Computer Programming', icon: '💻' },
-  { id: '2', label: 'Web Development', icon: '🌐' },
-  { id: '3', label: 'Database Management', icon: '🗃️' },
-  { id: '4', label: 'Network Security', icon: '🔒' },
-  { id: '5', label: 'Business and Entrepreneurship', icon: '💼' },
-  { id: '6', label: 'Project Management', icon: '📈' },
-  { id: '7', label: 'Statistics and Data Analysis', icon: '📊' },
-  { id: '8', label: 'Electronics', icon: '🔌' },
-  { id: '9', label: 'Mathematics', icon: '➕' },
-  { id: '10', label: 'Artificial Intelligence', icon: '🤖' },
-];
+
+
 
 
 
 const Intersts = (props) => {
-
-  const {selectedInterests, setSelectedInterests} = props;
-
+  const {selectedInterests, setSelectedInterests, setInterestsData} = props;
+  const [interests, setInterests] = useState([
+    { id: '1', label: 'Computer Programming', icon: '💻', preference: 0},
+    { id: '2', label: 'Web Development', icon: '🌐', preference: 0 },
+    { id: '3', label: 'Database Management', icon: '🗃️', preference: 0 },
+    { id: '4', label: 'Network Security', icon: '🔒', preference: 0 },
+    { id: '5', label: 'Business and Entrepreneurship', icon: '💼', preference: 0 },
+    { id: '6', label: 'Project Management', icon: '📈', preference: 0 },
+    { id: '7', label: 'Statistics and Data Analysis', icon: '📊', preference: 0 },
+    { id: '8', label: 'Electronics', icon: '🔌', preference: 0 },
+    { id: '9', label: 'Mathematics', icon: '➕', preference: 0 },
+    { id: '10', label: 'Artificial Intelligence', icon: '🤖', preference: 0 },
+  ]);
+  const highestRef = 5;
+  
   const handleInterestClick = (interest) => {
-    if (selectedInterests.includes(interest)) {
-      setSelectedInterests(selectedInterests.filter((i) => i !== interest));
-      
-    } else {
-      setSelectedInterests([...selectedInterests, interest]);
+    const index = interests.findIndex((i) => i.id === interest.id);
+    const updatedInterest = { ...interest, preference: highestRef - selectedInterests.length };
+    const updatedInterests = [...interests];
+    updatedInterests[index] = updatedInterest;
+  
+    setInterests(updatedInterests);
+  
+    if(highestRef - selectedInterests.length > 0)
+    {
+      var newSelectedInterests = [...selectedInterests];
+      const selectedIndex = newSelectedInterests.findIndex((i) => i.id === interest.id);
+      if (selectedIndex === -1) {
+        // If the interest is not already selected, add it to the end of the list
+        newSelectedInterests.push(updatedInterest);
+      } else {
+        // If the interest is already selected, update its preference and move it to the end of the list
+        newSelectedInterests[selectedIndex] = updatedInterest;
+        newSelectedInterests.push(newSelectedInterests.splice(selectedIndex, 1)[0]);
+      }
+    
+      setSelectedInterests(newSelectedInterests);
+      setInterestsData(updatedInterests);
     }
   };
-
+  
+  
+  
+  
   const handleDragEnd = (result) => {
     if (!result.destination) {
       return;
     }
 
-    const interestsCopy = Array.from(interestsData);
+    const interestsCopy = Array.from(interests);
     const [reorderedInterest] = interestsCopy.splice(result.source.index, 1);
     interestsCopy.splice(result.destination.index, 0, reorderedInterest);
 
@@ -43,7 +65,7 @@ const Intersts = (props) => {
 
   return (
     <div className="min-h-fit mt-5 flex flex-col justify-center items-center">
-      <h1 className="text-4xl font-bold mb-8">Select your interests</h1>
+      <h1 className="text-4xl font-bold mb-8">Select your interests - Maximum 5</h1>
       <div className="w-full p-6 rounded-lg bg-white">
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId="interests">
@@ -53,7 +75,7 @@ const Intersts = (props) => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {interestsData.map((interest, index) => (
+                {interests.map((interest, index) => (
                   <Draggable key={interest.id} draggableId={interest.id} index={index}>
                     {(provided) => (
                       <li

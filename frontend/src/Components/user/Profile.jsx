@@ -2,13 +2,17 @@ import React,{useState, useEffect} from 'react';
 import NavBar from '../NavBar/NavBar';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { auth } from '../../firebase';
-import { getDatabase, onValue, ref } from 'firebase/database';
+import { getDatabase, onValue, push, ref, update } from 'firebase/database';
 import ProfileHeaderInfos from './Components/profileHeaderInfos';
+import { useTheme } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function Profile() {
   const [Books, setBooks] = useState([]);
   const [Loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
 
   //incorrect code why ?
   /*useEffect(() => {
@@ -89,26 +93,53 @@ export default function Profile() {
 
     setLoading(true);
     const unsubscribe = onValue(borrowsRef, snapshot => {
-      const data = snapshot.val();
+      const borrowsData = snapshot.val();
       const borrows = [];
-      for (const key in data) {
-        borrows.push({ id: key, Book_id: data[key].Book_id });
+      for (const key in borrowsData) {
+        borrows.push({ id: key, ...borrowsData[key] });
       }
-
+    
       onValue(booksRef, snapshot => {
-        const data = snapshot.val();
-        const books = [];
-        for (const key in data) {
-          books.push({ id: key, ...data[key] });
+        const booksData = snapshot.val();
+        const borrowedBooks = [];
+        for (const key in booksData) {
+          const borrowedBook = borrows.find(borrow => borrow.Book_id === key);
+          if (borrowedBook) {
+            borrowedBooks.push({ id: key, ...booksData[key], borrow: borrowedBook });
+          }
         }
-        const borrowedBooks = books.filter(book => borrows.some(borrow => borrow.Book_id === book.id));
-        setBooks(borrowedBooks);
         setLoading(false);
+        setBooks(borrowedBooks);
+        console.log(borrowedBooks);
+        
       });
     });
+    
 
     return unsubscribe;
   }, [user]);
+
+  async function RequestReturn({ e, borrowId }) {
+    // here goes some code
+    e.preventDefault();
+    const user = auth.currentUser;
+    const db = getDatabase();
+    if(!user) return;
+    if (window.confirm('Are you sure you want to return the book?')) {
+      // update requested
+      const borrowRef = ref(db, `users/${user.uid}/borrows/${borrowId}`);
+      update(borrowRef, {
+        requested: true
+      })
+      //add request
+      const requestRef = ref(db, `requests`);
+      const today = new Date();
+      await push(requestRef, {
+        BorrowId: borrowId,
+        requestDate: today.toISOString()
+      })
+    }
+  }
 
   return (
     <div>
@@ -126,33 +157,49 @@ export default function Profile() {
                   </h1>
                   <ul>
                   <div className="">
-                    <TransitionGroup className="book-listgrid grid-cols-1 mt-4">
-                      {!Loading ? Books.length > 0 ? Books.map((book) => (
-                        //key={book.id} 
-                        <CSSTransition timeout={500} classNames="book">
-                          <li className='mb-3 flex list-none mx-auto book-item relative transition-transform delay-150 ease-linear'>
-                            <div key={book.id} className="flex justify-between w-full items-center p-4 rounded-lg border-mypalette-4 border-2">
-                              <div className='flex'>
-                                <img src={book.image} alt={book.title} className="w-16 h-16 rounded-md shadow-md mr-4" />
-                                <div>
-                                  <h2 className="text-lg font-medium">{book.title}</h2>
-                                  <h3 className="text-gray-500">{book.author}</h3>
+                      <TransitionGroup className="book-listgrid grid-cols-1 mt-4">
+                        {!Loading ? Books.length > 0 ? Books.map((book) => (
+                          <CSSTransition timeout={500} classNames="book" key={book.id}>
+                            <li className='mb-3 flex list-none mx-auto book-item relative transition-transform delay-150 ease-linear'>
+                              <div className="flex flex-col lg:flex-row w-full items-center p-4 rounded-lg border-mypalette-4 border-2">
+                                <div className='flex w-full mb-4'>
+                                  <img src={book.image} alt={book.title} className="w-24 h-24 rounded-md shadow-md mr-4" />
+                                  <div className='flex flex-col'>
+                                    <h2 className="text-lg font-medium mb-2">{!matches ? `${book.title.substring(0, Math.min(book.title.indexOf('\n') !== -1 ? book.title.indexOf('\n') : 20, 20))}...` : book.title }</h2>
+                                    <h3 className="text-gray-500">{book.author}</h3>
+                                  </div>
+                                </div>
+                                <div className="flex w-full justify-between lg:justify-end">
+                                  <div className='my-auto mr-4'>
+                                    {/*here i want to show the due date that is in borrows */}
+                                    {(() => {
+                                      if (book.borrow.requested) {
+                                        return <p className='text-green-600 font-bold'>Return requested</p>
+                                      }
+                                      const today = new Date();
+                                      const retDate = new Date(book.borrow.return_date);
+                                      const diff = retDate - today;
+                                      const days = -1 * Math.floor(diff / (1000 * 60 * 60 * 24));
+                                      if (days > 0) {
+                                        return <p className='text-red-500 font-bold'>Should have returned {days} days ago</p>;
+                                      }
+                                      else {
+                                        return <p className='text-green-600 font-bold'>Return in {-days} days</p>
+                                      }
+                                    })()}
+                                  </div>
+                                  {
+                                    book.borrow.requested ? (<></>) : (<button onClick={(e) => RequestReturn({ e: e, borrowId: book.borrow.id })} className='px-4 py-2 bg-mypalette-4 rounded-lg text-white font-bold hover:bg-mypalette-5'>Return</button>)
+                                  }
                                 </div>
                               </div>
-                              <div className="flex my-auto">
-                                <div>
-                                  {/*here i want to show the due date that is in borrows */}
-                                </div>
-                                <button className='px-4 py-2 bg-mypalette-4 rounded-lg text-white font-bold hover:bg-mypalette-5'>Return</button>
-                              </div>
-                            </div>
-                          </li>
-                        </CSSTransition>
-                      )) : (
-                        <div>No Borrowed Books</div>
-                      ) : (<>Loading</>)}
+                            </li>
+                          </CSSTransition>
+                        )) : (
+                          <div>No Borrowed Books</div>
+                        ) : (<></>)}
                       </TransitionGroup>
-                  </div>
+                    </div>
                   </ul>
                 </div>
               </div>
