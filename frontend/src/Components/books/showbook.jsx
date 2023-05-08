@@ -153,9 +153,7 @@ function BorrowOverlay({idBook, onClose}){
               onChange={(e) => {
                 setDateEmprint(new Date(e.target.value));
               }}
-              min={
-                new Date().toISOString().split('T')[0]
-              }
+              
             />
           </div>
           <div className="relative mt-5">

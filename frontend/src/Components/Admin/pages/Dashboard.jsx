@@ -211,7 +211,7 @@ function Dashboard() {
   const [sideUserInfos, setSideUserInfos] = useState(false);
   const [userselected, setuserselected] = useState(null);
   //mail stuff
-  const [MailSection, setMailSection] = useState(true);
+  const [MailSection, setMailSection] = useState(false);
   const [UserMail, setUserMail] = useState("");
   const [content, setContent] = useState("");
   const [Subject, setSubject] = useState("");

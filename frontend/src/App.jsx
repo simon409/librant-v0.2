@@ -20,6 +20,9 @@ import AddBooks from './Components/Admin/pages/books/AddBooks';
 import ShowDocs from './Components/Admin/pages/ShowDocs';
 import AddDocs from './Components/Admin/pages/docs/AddDocs';
 
+//request admin
+import Request from './Components/Admin/pages/Request';
+
 //books user stuff
 import Books from './Components/books/Books';
 import ShowBook from './Components/books/showbook';
@@ -60,6 +63,10 @@ function App() {
       <Route exact path="/showdocs" component={ShowDocs} />
       <Route exact path="/docs/category" component={ShowCategory} />
       <Route exact path="/docs/adddoc" component={AddDocs} />
+
+      {/*reqyest admin page */}
+      <Route exact path="/requests" component={Request} />
+
 
       {/*books user stuff */}
       <Route exact path="/books" component={Books} />

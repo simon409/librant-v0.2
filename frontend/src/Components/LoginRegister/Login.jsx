@@ -10,12 +10,15 @@ import { auth, provider } from "../../firebase";
 import { signInWithPopup } from "firebase/auth";
 import { useHistory } from 'react-router-dom';
 import { getDatabase, ref, set, onValue} from "firebase/database";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 export default function Login() {
     document.title = "Login to your Librant account"
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const history = useHistory();
+    const [Error, setError] = useState("")
 
     const LoginWithGoogle = () =>{
         signInWithPopup(auth, provider).then( async (data) =>{
@@ -68,10 +71,16 @@ export default function Login() {
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 console.log(errorMessage);
+                if(errorMessage === "Firebase: Error (auth/wrong-password)."){
+                    setError("Identifients invalide");
+                }
+                else{
+                    setError("Access to this account has been temporarily disabled due to many failed login attempts.")
+                }
                 console.error(errorCode, errorMessage);
             });
         } catch (error) {
-          console.error(error);
+          console.log(error);
         }
       };
 
@@ -108,6 +117,14 @@ export default function Login() {
                     <div className="mt-5">
                         <span className=" text-right block"><a href="/forgotpassword" className="text-mypalette-2 font-bold">Forgot password?</a></span>
                     </div>
+                    {
+                        Error ? (
+                            <Alert variant="outlined" severity="error" sx={{marginTop: '10px'}}>
+                                <AlertTitle><strong>Error</strong></AlertTitle>
+                                {Error} — <strong>{Error === "Identifients invalide" ? "Verify your infos!" : "Try Again after 1 min"}</strong>
+                            </Alert>
+                        ) : (<></>)
+                    }
                     <Button className="mt-6 p-4 text-white bg-mypalette-2" fullWidth onClick={()=>handleSubmit()} variant="filled">
                         Login
                     </Button>
