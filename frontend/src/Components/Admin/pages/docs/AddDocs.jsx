@@ -144,16 +144,6 @@ const AddDocs = () => {
             <main className='h-full'>
                 <div className="w-full h-full flex">
                     <div className='flex flex-col mx-auto relative w-1/2 top-1/2 -translate-y-1/2'>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<FaArrowLeft />}
-                            onClick={() => history.goBack()}
-                            className={tw`my-4`}
-                        >
-                            Back
-                        </Button>
-
                         <form onSubmit={formik.handleSubmit} className="w-full max-w-2xl my-auto">
                             <h2 className={tw`text-3xl font-semibold mb-5`}>Add Documents</h2>
                             {error && <ErrorMessage message={error.message} />}

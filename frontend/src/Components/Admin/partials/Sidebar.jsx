@@ -4,7 +4,7 @@ import SidebarLinkGroup from './SidebarLinkGroup';
 import librantLogo from '../../../assets/img/logo.png';
 import Transition from '../utils/Transition';
 
-function Sidebar({ sidebarOpen, setSidebarOpen }) {
+function Sidebar({ sidebarOpen, setSidebarOpen, Requests }) {
   const location = useLocation();
   const { pathname } = location;
 
@@ -161,10 +161,10 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                               </clipPath>
                             </defs>
                             <g id="a" clipPath="url(#b)">
-                              <rect className={`fill-current ${pathname.includes('showbooks') ? 'text-indigo-300' : 'text-slate-400'}`} width="16" height="16" rx="1" transform="translate(5 6)"/>
-                              <rect className={`fill-current ${pathname.includes('showbooks') ? 'text-indigo-500' : 'text-slate-600'}`} width="16" height="16" rx="1" transform="translate(3 4)"/>
-                              <path className={`fill-current ${pathname.includes('showbooks') ? 'text-indigo-600' : 'text-slate-700'}`} d="M0,0H6A0,0,0,0,1,6,0V9a1,1,0,0,1-1,1H1A1,1,0,0,1,0,9V0A0,0,0,0,1,0,0Z" transform="translate(11 4)"/>
-                              <path className={`fill-current ${pathname.includes('showbooks') ? 'text-indigo-600' : 'text-slate-700'}`} d="M12.48,14s.251.124.66-.3a2.291,2.291,0,0,0,.528-1.024s.239-1.057.5-1.057.5.693.5.693a4.079,4.079,0,0,0,.462,1.222c.3.421.429.462.429.462v.924s-2.08.66-2.179.693A11.1,11.1,0,0,1,12.48,14Z"/>
+                              <rect className={`fill-current ${pathname.includes('books') ? 'text-indigo-300' : 'text-slate-400'}`} width="16" height="16" rx="1" transform="translate(5 6)"/>
+                              <rect className={`fill-current ${pathname.includes('books') ? 'text-indigo-500' : 'text-slate-600'}`} width="16" height="16" rx="1" transform="translate(3 4)"/>
+                              <path className={`fill-current ${pathname.includes('books') ? 'text-indigo-600' : 'text-slate-700'}`} d="M0,0H6A0,0,0,0,1,6,0V9a1,1,0,0,1-1,1H1A1,1,0,0,1,0,9V0A0,0,0,0,1,0,0Z" transform="translate(11 4)"/>
+                              <path className={`fill-current ${pathname.includes('books') ? 'text-indigo-600' : 'text-slate-700'}`} d="M12.48,14s.251.124.66-.3a2.291,2.291,0,0,0,.528-1.024s.239-1.057.5-1.057.5.693.5.693a4.079,4.079,0,0,0,.462,1.222c.3.421.429.462.429.462v.924s-2.08.66-2.179.693A11.1,11.1,0,0,1,12.48,14Z"/>
                               </g>
                           </svg>
                             <span className={`text-sm text-black font-medium ml-3 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${hovered ? 'lg:opacity-100' : 'lg:opacity-0'}`}>
@@ -218,9 +218,9 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
                           <svg className=' shrink-0 h-6 w-6' viewBox="0 0 24 24">
-                          <path className={`fill-current ${pathname.includes('showdocs') || pathname.includes('adddocs') ? 'text-indigo-300' : 'text-slate-400'}`} id="Icon_ionic-md-document" data-name="Icon ionic-md-document" d="M15.877,3.375H8.651a1.9,1.9,0,0,0-1.9,1.9V21.248a1.9,1.9,0,0,0,1.9,1.9H20.06a1.9,1.9,0,0,0,1.9-1.9V9.459Zm-.761,6.845V4.9L20.44,10.22Z" transform="translate(-6.75 -2.375)"/>
-                          <path className={`fill-current ${pathname.includes('showdocs') || pathname.includes('adddocs') ? 'text-indigo-500' : 'text-slate-600'}`} id="Icon_ionic-md-document-2" data-name="Icon ionic-md-document" d="M15.877,3.375H8.651a1.9,1.9,0,0,0-1.9,1.9V21.248a1.9,1.9,0,0,0,1.9,1.9H20.06a1.9,1.9,0,0,0,1.9-1.9V9.459Zm-.761,6.845V4.9L20.44,10.22Z" transform="translate(-5.75 -3.375)"/>
-                          <path className={`fill-current ${pathname.includes('showdocs') || pathname.includes('adddocs') ? 'text-indigo-600' : 'text-slate-700'}`} id="Path_1" data-name="Path 1" d="M12.745,3.609V9.016h5.4Z" transform="translate(-3.395 -2.113)" fill="#4f46e5"/>
+                          <path className={`fill-current ${pathname.includes('docs') ? 'text-indigo-300' : 'text-slate-400'}`} id="Icon_ionic-md-document" data-name="Icon ionic-md-document" d="M15.877,3.375H8.651a1.9,1.9,0,0,0-1.9,1.9V21.248a1.9,1.9,0,0,0,1.9,1.9H20.06a1.9,1.9,0,0,0,1.9-1.9V9.459Zm-.761,6.845V4.9L20.44,10.22Z" transform="translate(-6.75 -2.375)"/>
+                          <path className={`fill-current ${pathname.includes('docs') ? 'text-indigo-500' : 'text-slate-600'}`} id="Icon_ionic-md-document-2" data-name="Icon ionic-md-document" d="M15.877,3.375H8.651a1.9,1.9,0,0,0-1.9,1.9V21.248a1.9,1.9,0,0,0,1.9,1.9H20.06a1.9,1.9,0,0,0,1.9-1.9V9.459Zm-.761,6.845V4.9L20.44,10.22Z" transform="translate(-5.75 -3.375)"/>
+                          <path className={`fill-current ${pathname.includes('docs') ? 'text-indigo-600' : 'text-slate-700'}`} id="Path_1" data-name="Path 1" d="M12.745,3.609V9.016h5.4Z" transform="translate(-3.395 -2.113)" fill="#4f46e5"/>
                           <path id="Icon_awesome-bars" data-name="Icon awesome-bars" d="M.276,5.462H7.458a.276.276,0,0,0,.276-.276V4.495a.276.276,0,0,0-.276-.276H.276A.276.276,0,0,0,0,4.495v.691A.276.276,0,0,0,.276,5.462Zm0,2.762H7.458a.276.276,0,0,0,.276-.276V7.257a.276.276,0,0,0-.276-.276H.276A.276.276,0,0,0,0,7.257v.691A.276.276,0,0,0,.276,8.224Zm0,2.762H7.458a.276.276,0,0,0,.276-.276v-.691a.276.276,0,0,0-.276-.276H.276A.276.276,0,0,0,0,10.019v.691A.276.276,0,0,0,.276,10.986Z" transform="translate(4.738 4.995)" fill="#fff"/>
                             
                           </svg>
@@ -282,7 +282,11 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                     </div>
                     {/* Badge */}
                     <div className="flex flex-shrink-0 ml-2">
-                      <span className="inline-flex items-center justify-center h-5 text-xs font-medium text-white bg-indigo-500 px-2 rounded">4</span>
+                      {
+                        Requests > 0 ? (
+                          <span className="inline-flex items-center justify-center h-5 text-xs font-medium text-white bg-indigo-500 px-2 rounded">{Requests}</span>
+                        ) : (<></>)
+                      }
                     </div>
                   </div>
                 </NavLink>
@@ -292,21 +296,21 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               <li className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${pathname.includes('calendar') && 'bg-slate-900'}`}>
                 <NavLink
                   end
-                  to="/calendar"
+                  to="/events"
                   className={`block text-slate-900 truncate transition duration-150 ${
                     pathname.includes('campaigns') ? 'hover:text-slate-800' : 'hover:text-black'
                   }`}
                 >
                   <div className="flex items-center">
                     <svg className="shrink-0 h-6 w-6" viewBox="0 0 24 24">
-                      <path className={`fill-current ${pathname.includes('calendar') ? 'text-indigo-500' : 'text-slate-600'}`} d="M1 3h22v20H1z" />
+                      <path className={`fill-current ${pathname.includes('events') ? 'text-indigo-500' : 'text-slate-600'}`} d="M1 3h22v20H1z" />
                       <path
-                        className={`fill-current ${pathname.includes('calendar') ? 'text-indigo-300' : 'text-slate-400'}`}
+                        className={`fill-current ${pathname.includes('events') ? 'text-indigo-300' : 'text-slate-400'}`}
                         d="M21 3h2v4H1V3h2V1h4v2h10V1h4v2Z"
                       />
                     </svg>
                     <span className={`text-sm text-black font-medium ml-3 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200 ${hovered ? 'lg:opacity-100' : 'lg:opacity-0'}`}>
-                      Calendar
+                      Events
                     </span>
                   </div>
                 </NavLink>

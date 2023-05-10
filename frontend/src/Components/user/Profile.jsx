@@ -126,16 +126,11 @@ export default function Profile() {
     const db = getDatabase();
     if(!user) return;
     if (window.confirm('Are you sure you want to return the book?')) {
-      // update requested
+      // update requested.
+      const today = new Date();
       const borrowRef = ref(db, `users/${user.uid}/borrows/${borrowId}`);
       update(borrowRef, {
-        requested: true
-      })
-      //add request
-      const requestRef = ref(db, `requests`);
-      const today = new Date();
-      await push(requestRef, {
-        BorrowId: borrowId,
+        requested: true,
         requestDate: today.toISOString()
       })
     }

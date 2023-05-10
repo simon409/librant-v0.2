@@ -7,7 +7,7 @@ import googleLOGO from "../../assets/svg/google.svg";
 import { Link } from "react-router-dom";
 import { Button } from "@material-tailwind/react";
 import { auth, provider } from "../../firebase";
-import { signInWithPopup } from "firebase/auth";
+import { signInWithPopup, deleteUser } from "firebase/auth";
 import { useHistory } from 'react-router-dom';
 import { getDatabase, ref, set, onValue} from "firebase/database";
 import Alert from '@mui/material/Alert';
@@ -18,12 +18,19 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const history = useHistory();
-    const [Error, setError] = useState("")
+    const [Error, setError] = useState("");
 
     const LoginWithGoogle = () =>{
         signInWithPopup(auth, provider).then( async (data) =>{
             const user = data.user;
-            console.log(user);
+            const domain = 'iga.ac.ma'; // Replace with your desired domain
+            const emailRegex = new RegExp(`^[a-zA-Z0-9_.+-]+@${domain}$`);
+            //verify users email
+            if (!emailRegex.test(user.email)) {
+                setError('Only email addresses from iga.ac.ma are allowed.');
+                deleteUser(user.uid)
+                return;
+            }
             // Save user data to the Firebase Realtime Database
             const database = getDatabase();
             const userRef = ref(database, "users/" + user.uid);
@@ -75,7 +82,7 @@ export default function Login() {
                     setError("Identifients invalide");
                 }
                 else{
-                    setError("Access to this account has been temporarily disabled due to many failed login attempts.")
+                    setError("Access to this account has been temporarily disabled due to many failed login attempts. - Try Again after 1 min")
                 }
                 console.error(errorCode, errorMessage);
             });
@@ -121,7 +128,7 @@ export default function Login() {
                         Error ? (
                             <Alert variant="outlined" severity="error" sx={{marginTop: '10px'}}>
                                 <AlertTitle><strong>Error</strong></AlertTitle>
-                                {Error} — <strong>{Error === "Identifients invalide" ? "Verify your infos!" : "Try Again after 1 min"}</strong>
+                                {Error} <strong>{Error === " — Identifients invalide" ? "Verify your infos!":""}</strong>
                             </Alert>
                         ) : (<></>)
                     }

@@ -14,7 +14,7 @@ import {
     InputLabel,
     FormControl,
     Typography,
-    TextField
+    TextField,
 } from '@mui/material';
 import {BiBookAdd} from "react-icons/bi"
 import { useHistory } from 'react-router-dom';
@@ -78,6 +78,7 @@ const AddBooks = () => {
         title: "",
         author: "",
         description: "",
+        quantity: "",
         image: ""
         },
         validationSchema: AddBookSchema,
@@ -92,6 +93,7 @@ const AddBooks = () => {
             title: values.title,
             author: values.author,
             description: values.description,
+            quantity: values.quantity,
             image: imageUrl,
             categories,
         };
@@ -112,28 +114,15 @@ const AddBooks = () => {
             {/*  Site header */}
             <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-            <main className='h-full'>
+            <main className='h-full mt-20 mb-20'>
                 <div className="w-full h-full flex">
-                    <div className='flex flex-col mx-auto relative top-1/2 -translate-y-1/2'>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            startIcon={<FaArrowLeft />}
-                            onClick={() => history.goBack()}
-                            className={tw`my-4`}
-                        >
-                            Back
-                        </Button>
-
+                    <div className='flex flex-col mx-10 lg:mx-auto md:mx-auto relative top-1/2 -translate-y-1/2'>
                         <form onSubmit={formik.handleSubmit} className="w-full max-w-2xl my-auto">
                             <h2 className={tw`text-3xl font-semibold mb-5`}>Add Book</h2>
                             {error && <ErrorMessage message={error.message} />}
                             {isLoading && <Loader />}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                <label htmlFor="titleInput" className="text-gray-700 font-medium mb-2 block">
-                                    Title
-                                </label>
                                 <TextField
                                     variant="outlined"
                                     fullWidth
@@ -150,9 +139,6 @@ const AddBooks = () => {
                                 />
                                 </div>
                                 <div>
-                                <label htmlFor="authorInput" className="text-gray-700 font-medium mb-2 block">
-                                    Author
-                                </label>
                                 <TextField
                                     variant="outlined"
                                     fullWidth
@@ -169,9 +155,6 @@ const AddBooks = () => {
                                 />
                                 </div>
                             </div>
-                            <label htmlFor="descriptionInput" className="text-gray-700 font-medium mb-2 block mt-6">
-                                Description
-                            </label>
                             <TextField
                                 variant="outlined"
                                 fullWidth
@@ -190,9 +173,6 @@ const AddBooks = () => {
                                 }
                                 helperText={formik.touched.description && formik.errors.description}
                             />
-                            <label htmlFor="categoryInput" className="text-gray-700 font-medium mb-2 block">
-                                Category
-                            </label>
                             <FormControl variant="outlined"
                                 sx={{
                                     marginTop: '10px'
@@ -244,6 +224,23 @@ const AddBooks = () => {
                                     <MenuItem value="Education/Teaching">Education/Teaching</MenuItem>
                                 </Select>
                             </FormControl>
+                            <TextField
+                                variant="outlined"
+                                fullWidth
+                                margin="normal"
+                                type='number'
+                                className="mb-4"
+                                id="quantity"
+                                name="quantity"
+                                label="Quantity"
+                                value={formik.values.quantity}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                error={
+                                    formik.touched.quantity && Boolean(formik.errors.quantity)
+                                }
+                                helperText={formik.touched.quantity && formik.errors.quantity}
+                            />
                             <label htmlFor="imageInput" className="text-gray-700 font-medium mb-2 block mt-6">
                                 Image
                             </label>

@@ -6,6 +6,7 @@ export const createBook = async (book) => {
     const bookRef = ref(database, "books/");
     await push(bookRef, book);
     history.push("/showbooks");
+    alert("added")
     return bookRef.id;
   } catch (error) {
     console.error("Error creating book: ", error);

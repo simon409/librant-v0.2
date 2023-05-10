@@ -17,6 +17,8 @@ const firebaseConfig = {
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const storage = getStorage(app);
+  const domain = 'iga.ac.ma';
   const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({prompt: 'select_account'})
   //Initializing auth to access to the service
   export {auth, provider, storage};

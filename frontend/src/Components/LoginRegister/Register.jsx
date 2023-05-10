@@ -9,6 +9,7 @@ import { Button } from "@material-tailwind/react";
 import { auth } from "../../firebase";
 import { getDatabase, ref, set} from "firebase/database";
 import { useHistory } from 'react-router-dom';
+import { Alert, AlertTitle } from "@mui/material";
 
 export default function Register() {
     document.title = "Create your Librant account"
@@ -17,9 +18,17 @@ export default function Register() {
     const [password, setPassword] = useState("");
     const [passwordConf, setPasswordConf] = useState("");
     const history = useHistory();
+    const [Error, setError] = useState("");
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const domain = 'iga.ac.ma'; // Replace with your desired domain
+        const emailRegex = new RegExp(`^[a-zA-Z0-9_.+-]+@${domain}$`);
+
+        if (!emailRegex.test(email)) {
+            setError('Only email addresses from iga.ac.ma are allowed.');
+            return;
+        }
         try {
             // Create user with email and password
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -96,6 +105,14 @@ export default function Register() {
                         value={passwordConf}
                         autoComplete="password"/>
                     </div>
+                    {
+                        Error ? (
+                            <Alert variant="outlined" severity="error" sx={{marginTop: '10px'}}>
+                                <AlertTitle><strong>Error</strong></AlertTitle>
+                                {Error} <strong>{Error === " — Identifients invalide" ? "Verify your infos!":""}</strong>
+                            </Alert>
+                        ) : (<></>)
+                    }
                     <Button className="mt-6 p-4 text-white bg-mypalette-2" fullWidth type="submit">REGISTER</Button>
                     <div className="mt-5">
                         <span className=" text-center block">Already registered? <a href="/login" className="text-mypalette-2 font-bold">Login</a></span>

@@ -13,7 +13,6 @@ import MoreInfos from './Components/LoginRegister/MoreInfos/MoreInfos';
 
 //book admin stuff
 import ShowBooks from './Components/Admin/pages/ShowBooks';
-import ShowCategory from './Components/Admin/pages/books/ShowCategory';
 import AddBooks from './Components/Admin/pages/books/AddBooks';
 
 //doc admin stuff
@@ -22,6 +21,9 @@ import AddDocs from './Components/Admin/pages/docs/AddDocs';
 
 //request admin
 import Request from './Components/Admin/pages/Request';
+
+//events admin
+import Events from './Components/Admin/pages/Events';
 
 //books user stuff
 import Books from './Components/books/Books';
@@ -55,17 +57,18 @@ function App() {
 
       {/*books admin stuff */}
       <Route exact path="/showbooks" component={ShowBooks} />
-      <Route exact path="/books/category" component={ShowCategory} />
       <Route exact path="/books/modify/:id" component={ModifyBook} />
       <Route exact path="/books/addbook" component={AddBooks} />
 
       {/*docs admin stuff */}
       <Route exact path="/showdocs" component={ShowDocs} />
-      <Route exact path="/docs/category" component={ShowCategory} />
       <Route exact path="/docs/adddoc" component={AddDocs} />
 
-      {/*reqyest admin page */}
+      {/*request admin page */}
       <Route exact path="/requests" component={Request} />
+
+      {/*events admin */}
+      <Route exact path="/events" component={Events} />
 
 
       {/*books user stuff */}
