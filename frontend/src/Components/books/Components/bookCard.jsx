@@ -284,7 +284,7 @@ const BookCard = ({ id, title, author, description, image }) => {
       <div className="test">
         {showplaylist ? <AddPlayList idbook={id} onClose={() => setshowplaylist(false)} playlisted={isPlayListed} playlistedname={playlistsnames}/> : null}
       </div>
-      <Card className="max-w-md mx-auto mt-8 cursor-pointer" onClick={handleClick}>
+      <Card className="max-w-md mx-auto mt-5 cursor-pointer" onClick={handleClick}>
         
         <div className="relative">
           <CardMedia className="h-48 md:h-48 lg:h-48" image={image} title={title} />

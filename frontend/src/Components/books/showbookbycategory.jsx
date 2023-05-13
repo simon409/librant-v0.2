@@ -20,6 +20,7 @@ import {
   } from "@mui/material";
   import { Home, ExpandMore } from "@mui/icons-material";
   import BookCard from "./Components/bookCard";
+import { useTranslation } from "react-i18next";
 
   const StyledBreadcrumb = styled(Chip)(({ theme }) => {
     const backgroundColor =
@@ -58,6 +59,7 @@ export default function ShowBookByCategory(){
     const {category} = useParams();
     const decodedCat = decodeURIComponent(category);
     const history = useHistory();
+    const [t] = useTranslation();
 
     //declare useState book - searchword
     const [books, setBooks] = useState([]);
@@ -91,7 +93,7 @@ export default function ShowBookByCategory(){
           }
         };
         fetchBooks();
-      }, []);
+      }, [decodedCat]);
 
       const handleSearch = (event) => {
         setsearchbook(event.target.value);
@@ -115,10 +117,10 @@ export default function ShowBookByCategory(){
                         component="a"
                         href="/"
                         onClick={()=>handleClick(0)}
-                        label="Home"
+                        label={t('home')}
                         icon={<Home fontSize="small" />}
                       />
-                      <StyledBreadcrumb component="a" href="/books" onClick={()=>handleClick(1)} label="Books" />
+                      <StyledBreadcrumb component="a" href="/books" onClick={()=>handleClick(1)} label={t('book')} />
                       <StyledBreadcrumb
                         label={decodedCat}
                         deleteIcon={<ExpandMore />}
@@ -130,14 +132,14 @@ export default function ShowBookByCategory(){
                 <div className="bg-blue-500 w-full h-96 rounded-lg">
                   <img src="https://images.unsplash.com/photo-1522407183863-c0bf2256188c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" className='object-cover h-full w-full rounded-lg bg-no-repeat bg-bottom brightness-75 relative' alt="imagetest" />
                   <div id="search" className='absolute w-full top-1/3 left-1/2 z-20 text-white -translate-y-1/2 -translate-x-1/2 text-4xl text-center'>
-                      <h1>Books like <b><u>{decodedCat}</u></b></h1>
+                      <h1>{t('books_like')} <b><u>{decodedCat}</u></b></h1>
                       <div className="flex justify-center gap-2">
                       <FormControl sx={{background: '#fff', borderRadius: '5px', width: '300px', marginTop:'20px'}}>
                       <TextField
                       fullWidth 
                       type="text"
                       variant='outlined'
-                      placeholder='Type to search for the book'
+                      placeholder={t('type_to_search')}
                       onChange={e=>handleSearch(e)}
                       />
                       </FormControl>
@@ -145,7 +147,7 @@ export default function ShowBookByCategory(){
                 </div>
             </div>
             
-            <h1 className="text-center text-3xl mt-5">Here's books related to {decodedCat}</h1>
+            <h1 className="text-center text-3xl mt-5">{t('here_are_books_related')} {decodedCat}</h1>
             {/* book listing */}
             <ul className='mb-6'>
                 {loading ? (
@@ -180,7 +182,7 @@ export default function ShowBookByCategory(){
                     </div>
                 </>
                 ) : (
-                <p className="text-center text-gray-500">No books found.</p>
+                <p className="text-center text-gray-500">{t('no_books_f')}</p>
                 )}
             </ul>
             </div>

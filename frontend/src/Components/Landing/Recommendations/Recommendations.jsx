@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { auth } from '../../../firebase';
 import { getDatabase, ref, onValue, get } from 'firebase/database';
 import BookCard from '../../books/Components/bookCard';
+import { useTranslation } from 'react-i18next';
 
 export default function Recommendations() {
   const [categories, setcategories] = useState([]);
@@ -9,6 +10,7 @@ export default function Recommendations() {
   const [RecommandedBooks, setRecommandedBooks] = useState([]);
   const [FavoritedBooks, setFavoritedBooks] = useState([]);
   const db = getDatabase();
+  const [t] = useTranslation(); 
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -98,7 +100,7 @@ export default function Recommendations() {
     <div>
       {RecommandedBooks.length > 0 ? 
       <div className="px-12 py-12">
-        <div className="text-4xl font-bold">Recommended for you</div> : <></>
+        <div className="text-4xl font-bold">{t('recommended_for_you')}</div>
         <ul className="mb-6">
           {
             RecommandedBooks.length > 0 ? (
@@ -118,7 +120,7 @@ export default function Recommendations() {
                   ))
                 }
               </div>
-            ) : (<>No</>)
+            ) : (<>Error getting data</>)
           }
         </ul>
       </div> : <></>}

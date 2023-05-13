@@ -12,6 +12,7 @@ import { useHistory } from 'react-router-dom';
 import { getDatabase, ref, set, onValue} from "firebase/database";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import { useTranslation } from "react-i18next";
 
 export default function Login() {
     document.title = "Login to your Librant account"
@@ -19,15 +20,16 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const history = useHistory();
     const [Error, setError] = useState("");
+    const [t] = useTranslation();
 
     const LoginWithGoogle = () =>{
         signInWithPopup(auth, provider).then( async (data) =>{
             const user = data.user;
-            const domain = 'iga.ac.ma'; // Replace with your desired domain
+            const domain = 'etud.iga.ac.ma'; // Replace with your desired domain
             const emailRegex = new RegExp(`^[a-zA-Z0-9_.+-]+@${domain}$`);
             //verify users email
             if (!emailRegex.test(user.email)) {
-                setError('Only email addresses from iga.ac.ma are allowed.');
+                setError(t('only_iga_email_allowed'));
                 deleteUser(user.uid)
                 return;
             }
@@ -79,10 +81,10 @@ export default function Login() {
                 const errorMessage = error.message;
                 console.log(errorMessage);
                 if(errorMessage === "Firebase: Error (auth/wrong-password)."){
-                    setError("Identifients invalide");
+                    setError(t('invalid_credentials'));
                 }
                 else{
-                    setError("Access to this account has been temporarily disabled due to many failed login attempts. - Try Again after 1 min")
+                    setError(t('account_disabled'))
                 }
                 console.error(errorCode, errorMessage);
             });
@@ -101,12 +103,12 @@ export default function Login() {
                             <img src={LOGO} alt="" />
                         </Link>
                     </div>
-                    <h1 className="text-bold text-3xl text-center mb-5 text-mypalette-2">Welcome back!</h1>
+                    <h1 className="text-bold text-3xl text-center mb-5 text-mypalette-2">{t('welcome_back')}</h1>
                     <div className="flex flex-col gap-2">
                         <TextField 
                         fullWidth 
                         type="email"
-                        label="Email Address" 
+                        label={t('email_address')}
                         onChange={(event) => setEmail(event.target.value)}
                         value={email}
                         autoComplete="email"/>
@@ -116,31 +118,31 @@ export default function Login() {
                         <TextField 
                         fullWidth 
                         type="password"
-                        label="Password" 
+                        label={t('password')} 
                         onChange={(event) => setPassword(event.target.value)}
                         value={password}
                         autoComplete="password"/>
                     </div>
                     <div className="mt-5">
-                        <span className=" text-right block"><a href="/forgotpassword" className="text-mypalette-2 font-bold">Forgot password?</a></span>
+                        <span className=" text-right block"><a href="/forgotpassword" className="text-mypalette-2 font-bold">{t('forgot_password')}</a></span>
                     </div>
                     {
                         Error ? (
                             <Alert variant="outlined" severity="error" sx={{marginTop: '10px'}}>
                                 <AlertTitle><strong>Error</strong></AlertTitle>
-                                {Error} <strong>{Error === " — Identifients invalide" ? "Verify your infos!":""}</strong>
+                                {Error} <strong>{Error === t('invalid_credentials') ? t('verify_your_infos'):""}</strong>
                             </Alert>
                         ) : (<></>)
                     }
                     <Button className="mt-6 p-4 text-white bg-mypalette-2" fullWidth onClick={()=>handleSubmit()} variant="filled">
-                        Login
+                        {t('login')}
                     </Button>
                     <div className="mt-5">
-                        <span className=" text-center block">New here? <a href="/register" className="text-mypalette-2 font-bold">Register</a></span>
+                        <span className=" text-center block">{t('new_here')} <a href="/register" className="text-mypalette-2 font-bold">{t('register')}</a></span>
                     </div>
                     <hr className="mt-2 mb-2"/>
                     <div className="flex flex-col items-center gap-4">
-                        <span className="text-bold text-mypalette-2">Or continue with google</span>
+                        <span className="text-bold text-mypalette-2">{t('or_continue_with_google')}</span>
                         <Button
                             size="lg"
                             variant="outlined"
@@ -149,7 +151,7 @@ export default function Login() {
                             className="flex items-center gap-3 p-4"
                         >
                             <img src={googleLOGO} alt="metamask" className="h-6 w-6" />
-                            Continue with Google
+                            {t('continue_with_google')}
                         </Button>
                     </div>
                 </form>

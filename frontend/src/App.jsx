@@ -38,9 +38,22 @@ import History from './Components/user/History';
 import Playlists from './Components/user/Playlists';
 import LikedBooks from './Components/user/LikedBooks';
 import Settings from './Components/user/Settings';
+import cookies from './cookies/Cookies';
+import i18n from './i18n';
 
 
 function App() {
+  var date = new Date();
+  var newDate = new Date(date.setMonth(date.getMonth() + 2));
+  if (cookies.get("lang") === "fr") {
+    i18n.changeLanguage("fr");
+  } else {
+    i18n.changeLanguage("en");
+  }
+
+  if(cookies.get("lang")=== undefined){
+    cookies.set("lang", "fr", { path: "/", expires: newDate });
+  }
   return (
     <Switch>
       <Route exact path="/" component={Landing} />
@@ -80,6 +93,7 @@ function App() {
       {/*404 page */}
       <Route exact path="/404" component={Error} />
       <Redirect from="*" to="/404" />
+      
     </Switch>
   );
 }

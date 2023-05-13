@@ -9,6 +9,7 @@ import { LinearProgress, IconButton, Breadcrumbs, Chip } from '@mui/material';
 import { Favorite, FavoriteBorder, Home } from '@mui/icons-material';
 import { auth } from '../../firebase';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTranslation } from 'react-i18next';
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
   const backgroundColor =
@@ -69,6 +70,9 @@ function BorrowOverlay({idBook, onClose}){
    const [Borrowed, setBorrowed] = useState(false)
    const [DateEmprint, setDateEmprint] = useState(new Date());
    const [Error, setError] = useState(null);
+   const history = useHistory();
+   const user = auth.currentUser;
+   const [t] = useTranslation();
    useEffect(() => {
      const fetchBook = async () => {
          // User is signed in, fetch user data
@@ -89,10 +93,13 @@ function BorrowOverlay({idBook, onClose}){
 
    const HandelBorrow = async () => {
     try {
-      const user = auth.currentUser;
       const bookRef = ref(getDatabase(), `books/${idBook}`);
       const bookSnap = await get(bookRef);
       const Book = bookSnap.val();
+
+      if(!user){
+        history.push('/login');
+      }
   
       // Check if user already has this book in borrows
       const userBorrowsRef = ref(getDatabase(), `users/${user.uid}/borrows`);
@@ -101,19 +108,20 @@ function BorrowOverlay({idBook, onClose}){
       const existingBorrow = Object.values(borrowsData || {}).find(
         (borrow) => borrow.Book_id === idBook
       );
+      
       if(Object.keys(borrowsData || {}).length >= 2){
-        setError("You have reached the maximum number of borrows, return books in order to borrow others.");
+        setError(t('you_reached'));
         return;
       }
       if (existingBorrow) {
-        setError("You already have this book");
+        setError(t('you_already_have_b'));
         return;
       }
   
       // Add borrows to user tables
       const returnDate = new Date(DateEmprint);
       returnDate.setDate(returnDate.getDate() + 14); // assuming a 14-day borrowing period
-      const newBorrowRef = push(userBorrowsRef); // create a new reference for the new object
+      const newBorrowRef = push(userBorrowsRef);
       await update(newBorrowRef, {
         Book_id: idBook,
         borrowdate: DateEmprint,
@@ -134,10 +142,10 @@ function BorrowOverlay({idBook, onClose}){
       <div className="absolute w-full p-4 container">
         <div className="relative min-h-fit left-1/2 -translate-x-1/2 max-w-md bg-white rounded-lg p-4 border-mypalette-2 border-2 transition-all delay-150">
           <div className="text-xl text-mypalette-2">
-            Book title: <p className='font-bold inline w-fit'>{Book ? Book.title : "Loading"}</p>
+            {t('book_title')}: <p className='font-bold inline w-fit'>{Book ? Book.title : "Loading"}</p>
           </div>
           <div className='relative flex flex-col gap-5 top-1/2 w-full'>
-            <h1>Select date to get your book</h1>
+            <h1>{t('select_date_to_borrow')}</h1>
             <input 
               type="date" 
               required
@@ -153,24 +161,24 @@ function BorrowOverlay({idBook, onClose}){
               onChange={(e) => {
                 setDateEmprint(new Date(e.target.value));
               }}
-              
+              //add min function
             />
           </div>
           <div className="relative mt-5">
-            <button onClick={() => setConfirm(true)} className="px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200">Borrow it</button>
+            <button onClick={() => setConfirm(true)} className="px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200">{t('borrow_it')}</button>
           </div>
           {
             Error==null ? (
               !Borrowed ? (Confirm ? (<div className=' bg-slate-300 mt-5 p-4 rounded-lg'>
-                Do you confirm your borrow?
+                {t('do_you_conf')}
                 <div className="relative mt-5 flex gap-5">
-                  <button onClick={HandelBorrow} className="px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200">Yes</button>
-                  <button onClick={onClose} className="px-6 py-2 bg-red-500 text-white text-bold rounded-md shadow-md hover:bg-red-600 transition duration-200">No</button>
+                  <button onClick={HandelBorrow} className="px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200">{t('yes')}</button>
+                  <button onClick={onClose} className="px-6 py-2 bg-red-500 text-white text-bold rounded-md shadow-md hover:bg-red-600 transition duration-200">{t('no')}</button>
                 </div>
               </div>) : (<></>)) : (
                 <div className=' bg-green-200 mt-5 p-4 rounded-lg'>
                   <h1 className="text-green-600">
-                    You have borroed this book with <b>success</b>
+                    {t('you_have_b')}
                   </h1>
                 </div>
               )
@@ -199,6 +207,7 @@ function ShowBook() {
   const history = useHistory();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const [t] = useTranslation();
 
   //this check for the user and show his infos
   const [book, setBook] = useState(null);
@@ -302,10 +311,10 @@ function ShowBook() {
             component="a"
             href="/"
             onClick={()=>handleClick(0)}
-            label="Home"
+            label={t('home')}
             icon={<Home fontSize="small" />}
           />
-          <StyledBreadcrumb component="a" href="/books" onClick={()=>handleClick(1)} label="Books" />
+          <StyledBreadcrumb component="a" href="/books" onClick={()=>handleClick(1)} label={t('book')} />
           <StyledBreadcrumb
             label={matches ? book.title : `${book.title.substring(0, Math.min(book.title.indexOf('\n') !== -1 ? book.title.indexOf('\n') : 15, 15))}...`}
             onClick={()=>handleClick(2)}
@@ -365,15 +374,15 @@ function ShowBook() {
               ))}
             </p>
             <p className={book.Quantity ? "mt-4 text-lg leading-7 w-fit py-1 px-2 rounded-lg text-white bg-green-500" : 
-            "mt-4 text-lg leading-7 w-fit py-1 px-2 rounded-lg text-white bg-red-500"}>{book.Quantity > 0 ? "Available" : "Not Available"}</p>
+            "mt-4 text-lg leading-7 w-fit py-1 px-2 rounded-lg text-white bg-red-500"}>{book.Quantity > 0 ? t('available') : t('not_available')}</p>
             <div className="flex gap-4 mt-6">
-              <button disabled={book.Quantity == 0} onClick={() => setShowBorrowOverlay(true)} className={book.Quantity > 0 ? "px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200" : "px-6 py-2 bg-slate-500 text-white text-bold rounded-md shadow-md"}>Borrow it</button>
-              <button className="px-6 py-2 bg-gray-200 text-blue-600 text-bold rounded-md shadow-md hover:bg-gray-300 transition duration-200">Buy it</button>
+              <button disabled={book.Quantity == 0} onClick={() => setShowBorrowOverlay(true)} className={book.Quantity > 0 ? "px-6 py-2 bg-blue-500 text-white text-bold rounded-md shadow-md hover:bg-blue-600 transition duration-200" : "px-6 py-2 bg-slate-500 text-white text-bold rounded-md shadow-md"}>{t('borrow_it')}</button>
+              <button className="px-6 py-2 bg-gray-100 text-blue-600 text-bold rounded-md shadow-md hover:bg-gray-200 transition duration-200">{t('buy_it')}</button>
             </div>
           </div>
         </div>
         <div className="mt-6">
-          <h3 className="text-2xl font-bold mb-4 text-gray-800">You might also like:</h3>
+          <h3 className="text-2xl font-bold mb-4 text-gray-800">{t('you_might_like')}</h3>
             {/* book listing */}
             <ul className='mb-4'>
               {loading ? (
@@ -400,7 +409,7 @@ function ShowBook() {
                   })}
                 </div>
                 ) : (
-                <p className="text-center text-gray-500">No books found.</p>
+                <p className="text-center text-gray-500">{t('no_book_f')}</p>
               )}
             </ul>
           </div>

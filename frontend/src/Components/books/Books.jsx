@@ -29,6 +29,7 @@ import {
 import "./style/style.css";
 import { createCanvas } from "canvas";
 import { Home } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => {
@@ -68,6 +69,7 @@ export default function Books() {
   const [Books, setBooks] = useState([]);
   const [page, setPage] = useState(1);
   const booksPerPage = 20;
+  const [t] = useTranslation();
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -136,17 +138,17 @@ export default function Books() {
               component="a"
               href="/"
               onClick={()=>handleClick(0)}
-              label="Home"
+              label={t('home')}
               icon={<Home fontSize="small" />}
             />
-            <StyledBreadcrumb component="a" href="/books" onClick={()=>handleClick(1)} label="Books" />
+            <StyledBreadcrumb component="a" href="/books" onClick={()=>handleClick(1)} label={t('book')} />
           </Breadcrumbs>
         </div>
         {/*Image ads*/}
         <div className="bg-blue-500 w-full h-96 rounded-lg">
           <img src="https://images.unsplash.com/photo-1596123068611-c89d922a0f0a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1438&q=80" className='object-cover h-full w-full rounded-lg bg-no-repeat bg-bottom brightness-75 relative' alt="imagetest" />
           <div id="search" className='absolute w-full top-1/3 left-1/2 z-20 text-white -translate-y-1/2 -translate-x-1/2 text-4xl text-center'>
-            <h1>Find Your <b><u>{Type === "books" ? ('Book') : ('Document')}</u></b></h1>
+            <h1>{t('find_you')} <b><u>{Type === "books" ? t('book') : t('docs')}</u></b></h1>
             <div className="absolute flex justify-center gap-2 lg:flex-row flex-col -translate-x-1/2 left-1/2">
               <FormControl sx={{background: '#fff', borderRadius: '5px', width: '300px', marginTop:'20px'}}>
                 <TextField
@@ -164,15 +166,16 @@ export default function Books() {
                     variant="standard"
                     fullWidth
                     sx={{
-                      height: '100%'
+                      height: '100%',
+                      paddingX: '10px'
                     }}
                     onChange={e => setType(e.target.value)}
                     value={Type}
                     margin="normal"
                     label="Category"
                 >
-                    <MenuItem value="books">Books</MenuItem>
-                    <MenuItem value="docs">Documents</MenuItem>
+                    <MenuItem value="books">{t('book')}</MenuItem>
+                    <MenuItem value="docs">{t('docs')}</MenuItem>
                 </Select>
               </FormControl>
           </div>
@@ -180,9 +183,9 @@ export default function Books() {
       </div>
       {
         Type === "books" ? (
-          <h1 className='text-center text-4xl mt-5 mb-5'>{searchbook != "" ? "Here some similar book relative to you search" : "Here are our books"}</h1>
+          <h1 className='text-center text-4xl mt-5 mb-5'>{searchbook != "" ? t('here_some_sim') : t('here_are_our_books')}</h1>
         ) : (
-          <h1 className='text-center text-4xl mt-5 mb-5'>{searchbook != "" ? "Here some similar documents relative to you search" : "Here are our documents"}</h1>
+          <h1 className='text-center text-4xl mt-5 mb-5'>{searchbook != "" ? t('here_some_sim_docs') : t('here_are_our_docs')}</h1>
         )
       }
       {/* book listing */}

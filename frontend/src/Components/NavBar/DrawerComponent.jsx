@@ -5,7 +5,8 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
+  Collapse
 } from "@mui/material";
 import { useEffect } from "react";
 import Avatar from '@mui/material/Avatar';
@@ -28,12 +29,18 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { useTranslation } from "react-i18next";
 
 
-function DrawerComponent() {
+function DrawerComponent(props) {
+  const {setsearch} = props;
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [categoryOpen, setcategoryOpen] = useState(false);
+  const [languageOpen, setlanguageOpen] = useState(false);
+  const [categories, setcategories] = useState([]);
   //this check for the user and show his infos
   const [user, setUser] = useState(null);
+  const [t] = useTranslation();
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -55,6 +62,21 @@ function DrawerComponent() {
     // Unsubscribe from the listener when the component is unmounted
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    const bookRef = ref(getDatabase(), 'books');
+    const unsubscribe = onValue(bookRef, (snapshot) => {
+      const data = snapshot.val();
+      const bookArray = Object.keys(data).map((key) => ({
+        id: key,
+        ...data[key]
+      }));
+      const uniqueCategories = [...new Set(bookArray.flatMap(book => book.categories))];
+      setcategories(uniqueCategories);
+    });
+    return unsubscribe;
+  }, []);
+
   //sign the user out of the application
   const history = useHistory();
 
@@ -77,6 +99,10 @@ function DrawerComponent() {
   const closeDraweAndSignOut = () => {
     setOpenDrawer(false);
     handleSignOut();
+  }
+
+  const redirect = ({page}) => {
+    history.push(`/${page}`);
   }
   return (
     <div>
@@ -118,42 +144,72 @@ function DrawerComponent() {
             <ListItemText sx={{ display: 'flex', gap: '20px'}}>
               <HomeIcon sx={{marginInline: 'auto'}}/>
               {" "}
-              <Link to="/" className="font-semibold">Home</Link>
+              <Link to="/" className="font-semibold">{t('home')}</Link>
             </ListItemText>
           </ListItem>
           <ListItem onClick={() => setOpenDrawer(false)}>
             <ListItemText sx={{ display: 'flex', gap: '20px'}}>
               <BookIcon sx={{marginInline: 'auto'}}/>
               {" "}
-              <Link to="/books" className="font-semibold">Books</Link>
+              <Link to="/books" className="font-semibold">{t('books')}</Link>
             </ListItemText>
           </ListItem>
-          <ListItem onClick={() => setOpenDrawer(false)}>
-            <ListItemText sx={{ display: 'flex', gap: '20px'}}>
-              <CategoryIcon sx={{marginInline: 'auto'}}/>
-              {" "}
-              <Link to="/" className="font-semibold">Category</Link>
+          <ListItem onClick={() => setcategoryOpen(!categoryOpen)}>
+            <ListItemText sx={{ display: 'flex', gap: '20px' }}>
+              <CategoryIcon sx={{ marginInline: 'auto' }} />
+              <Link to="/" className="font-semibold">{t('category')}</Link>
             </ListItemText>
           </ListItem>
-          <ListItem onClick={() => setOpenDrawer(false)}>
+          <Collapse in={categoryOpen} timeout="auto" unmountOnExit>
+            {/* Place your category list component here */}
+            {/* Example: <CategoryList /> */}
+            <div className="px-5 flex flex-col gap-3">
+              {
+                categories ? categories.length>0 ? (
+                  categories.map(cat=>(
+                    <button>
+                      <li className="bg-slate-100 h-14 flex rounded-lg">
+                        <p className="my-auto mx-auto text-center">{cat}</p>
+                      </li>
+                    </button>
+                  ))
+                ) : (<>No category yet</>) : (<>error</>)
+              }
+            </div>
+          </Collapse>
+          <ListItem onClick={() => setlanguageOpen(!languageOpen)}>
             <ListItemText sx={{ display: 'flex', gap: '20px'}}>
               <LanguageIcon sx={{marginInline: 'auto'}}/>
               {" "}
-              <Link to="/" className="font-semibold">Language</Link>
+              <Link to="/" className="font-semibold">{t('lang')}</Link>
             </ListItemText>
           </ListItem>
+          <Collapse in={languageOpen} timeout="auto" unmountOnExit>
+            {/* Place your category list component here */}
+            {/* Example: <CategoryList /> */}
+            <div className="px-5 flex flex-col gap-3">
+              <button>
+                <li className="bg-slate-100 h-14 flex rounded-lg">
+                  <p className="my-auto mx-auto text-center">Français</p>
+                </li>
+              </button>
+                <li className="bg-slate-100 h-14 flex rounded-lg">
+                  <p className="my-auto mx-auto text-center">English</p>
+                </li>
+            </div>
+          </Collapse>
           <ListItem onClick={() => setOpenDrawer(false)}>
             <ListItemText sx={{ display: 'flex', gap: '20px'}}>
               <SupportIcon sx={{marginInline: 'auto'}}/>
               {" "}
-              <Link to="/" className="font-semibold">Support</Link>
+              <Link to="/" className="font-semibold">{t('support')}</Link>
             </ListItemText>
           </ListItem>
-          <ListItem onClick={() => setOpenDrawer(false)}>
+          <ListItem onClick={() => setsearch(true)}>
             <ListItemText sx={{ display: 'flex', gap: '20px'}}>
               <SearchIcon sx={{marginInline: 'auto'}}/>
               {" "}
-              <Link to="/" className="font-semibold">Search</Link>
+              <Link to="/" className="font-semibold">{t('search')}</Link>
             </ListItemText>
           </ListItem>
           <div className="w-full p-1"></div>
@@ -163,23 +219,23 @@ function DrawerComponent() {
             <ListItemText sx={{ display: 'flex', gap: '20px'}}>
               <SettingsIcon sx={{marginInline: 'auto'}}/>
               {" "}
-              <Link to="/" className="font-semibold">Settings</Link>
+              <Link to="/" className="font-semibold">{t('settings')}</Link>
             </ListItemText>
           </ListItem>
           {!user ? (<>
           
-          <ListItem onClick={() => closeDraweAndSignOut() }>
+          <ListItem onClick={() => redirect({page: 'login'}) }>
             <ListItemText sx={{ display: 'flex', gap: '20px'}}>
               <LoginIcon sx={{marginInline: 'auto'}}/>
               {" "}
-              <Link to="/" className="font-semibold">Login</Link>
+              <Link to="/" className="font-semibold">{t('login')}</Link>
             </ListItemText>
           </ListItem>
-          <ListItem onClick={() => closeDraweAndSignOut() }>
+          <ListItem onClick={() => redirect({page: 'register'}) }>
             <ListItemText sx={{ display: 'flex', gap: '20px'}}>
               <PersonAddIcon sx={{marginInline: 'auto'}}/>
               {" "}
-              <Link to="/" className="font-semibold">Register</Link>
+              <Link to="/" className="font-semibold">{t('register')}</Link>
             </ListItemText>
           </ListItem>
 
@@ -188,7 +244,7 @@ function DrawerComponent() {
               <ListItemText sx={{ display: 'flex', gap: '20px'}}>
                 <LogoutIcon sx={{marginInline: 'auto'}}/>
                 {" "}
-                <Link to="/" className="font-semibold">Sign Out</Link>
+                <Link to="/" className="font-semibold">{t('logout')}</Link>
               </ListItemText>
           </ListItem>
           )}

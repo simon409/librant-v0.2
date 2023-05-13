@@ -6,6 +6,7 @@ import { getDatabase, onValue, push, ref, update } from 'firebase/database';
 import ProfileHeaderInfos from './Components/profileHeaderInfos';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTranslation } from 'react-i18next';
 
 export default function Profile() {
   const [Books, setBooks] = useState([]);
@@ -13,6 +14,7 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const [t] = useTranslation();
 
   //incorrect code why ?
   /*useEffect(() => {
@@ -148,7 +150,7 @@ export default function Profile() {
               <div className="flex flex-col gap-2 pt-5 bg-white py-4 px-14 rounded-b-lg">
                 <div id="name">
                   <h1 className="text-2xl font-bold">
-                    Borrowed Books
+                    {t('borrowed_books')}
                   </h1>
                   <ul>
                   <div className="">

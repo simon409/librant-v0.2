@@ -1,10 +1,11 @@
 import BOY from "../../../assets/img/boy.jpg";
 import logo from "../../../assets/img/logo.png";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Button from '@mui/material/Button';
 
 export default function Hero(){
-    
+    const [t] = useTranslation(); 
     return(
         <div className="flex h-screen">
             <div className="lg:w-1/2 flex flex-col z-10 text-center lg:text-left">
@@ -14,12 +15,14 @@ export default function Hero(){
                         <p></p>
                         <h1 className="text-5xl lg:text-7xl font-bold my-auto">LIBRANT</h1>
                     </div>
-                    <h1 className="lg:text-3xl text-xl font-bold">The new modern Library for <p className="lg:text-3xl inline text-xl text-my">you</p></h1>
-                    <p className="mt-5">Welcome to <p className="inline font-bold">LIBRANT</p>. An intelligent library management system designed for easy browsing, checking out, and managing of library resources from anywhere. With a user-friendly interface and advanced technology, you can search, request holds, and renew materials effortlessly. Whether you're a student, teacher, or avid reader, LIBRANT makes your library experience more efficient and enjoyable. Start exploring today!</p>
+                    <h1 className="lg:text-3xl text-xl font-bold">{t("new_lib_title")}</h1>
+                    <p className="mt-5">
+                        {t('landing_presentation')}
+                    </p>
                     <div className="mt-5">
                         <Button className="bg-mypalette-2">
                             <Link to="#" style={{ textDecoration: 'none'}}>
-                                <span className="font-bold text-gray-800">Learn More</span>
+                                <span className="font-bold text-gray-800">{t('learn_more')}</span>
                             </Link>
                         </Button>
                     </div>

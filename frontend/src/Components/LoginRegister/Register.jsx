@@ -10,6 +10,7 @@ import { auth } from "../../firebase";
 import { getDatabase, ref, set} from "firebase/database";
 import { useHistory } from 'react-router-dom';
 import { Alert, AlertTitle } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 export default function Register() {
     document.title = "Create your Librant account"
@@ -19,6 +20,7 @@ export default function Register() {
     const [passwordConf, setPasswordConf] = useState("");
     const history = useHistory();
     const [Error, setError] = useState("");
+    const [t] = useTranslation();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -26,7 +28,7 @@ export default function Register() {
         const emailRegex = new RegExp(`^[a-zA-Z0-9_.+-]+@${domain}$`);
 
         if (!emailRegex.test(email)) {
-            setError('Only email addresses from iga.ac.ma are allowed.');
+            setError(t('only_iga_email_allowed'));
             return;
         }
         try {
@@ -68,12 +70,12 @@ export default function Register() {
                             <img src={LOGO} alt="" />
                         </Link>
                     </div>
-                    <h1 className="text-bold text-3xl text-center mb-5 text-mypalette-2">Welcome!</h1>
+                    <h1 className="text-bold text-3xl text-center mb-5 text-mypalette-2">{t('welcome')}</h1>
                     <div className="flex flex-col gap-2">
                         <TextField 
                         fullWidth 
                         type="text"
-                        label="Full Name" 
+                        label={t('full_name')}
                         onChange={(event) => setfullname(event.target.value)}
                         value={fullname}
                         autoComplete="name"/>
@@ -82,7 +84,7 @@ export default function Register() {
                         <TextField 
                         fullWidth 
                         type="email"
-                        label="Email Address" 
+                        label={t('email_address')}
                         onChange={(event) => setEmail(event.target.value)}
                         value={email}
                         autoComplete="email"/>
@@ -91,7 +93,7 @@ export default function Register() {
                         <TextField 
                         fullWidth 
                         type="password"
-                        label="Password" 
+                        label={t('password')}
                         onChange={(event) => setPassword(event.target.value)}
                         value={password}
                         autoComplete="password"/>
@@ -100,7 +102,7 @@ export default function Register() {
                     <TextField 
                         fullWidth 
                         type="password"
-                        label="Confirm Password" 
+                        label={t('confirm_password')} 
                         onChange={(event) => setPasswordConf(event.target.value)}
                         value={passwordConf}
                         autoComplete="password"/>
@@ -113,9 +115,9 @@ export default function Register() {
                             </Alert>
                         ) : (<></>)
                     }
-                    <Button className="mt-6 p-4 text-white bg-mypalette-2" fullWidth type="submit">REGISTER</Button>
+                    <Button className="mt-6 p-4 text-white bg-mypalette-2" fullWidth type="submit">{t('register')}</Button>
                     <div className="mt-5">
-                        <span className=" text-center block">Already registered? <a href="/login" className="text-mypalette-2 font-bold">Login</a></span>
+                        <span className=" text-center block">{t('already_registered')} <a href="/login" className="text-mypalette-2 font-bold">{t('login')}</a></span>
                     </div>
                 </form>
             </div>
