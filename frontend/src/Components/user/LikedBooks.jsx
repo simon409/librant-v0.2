@@ -7,6 +7,7 @@ import ProfileHeaderInfos from './Components/profileHeaderInfos';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import BookCard from '../books/Components/bookCard';
+import { useTranslation } from 'react-i18next';
 
 
 export default function LikedBooks() {
@@ -15,6 +16,7 @@ export default function LikedBooks() {
   const [user, setUser] = useState(null);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const [t] = useTranslation();
 
   //incorrect code why ?
   /*useEffect(() => {
@@ -149,7 +151,7 @@ export default function LikedBooks() {
             <div className="flex flex-col gap-2 pt-5 bg-white py-4 px-14 rounded-b-lg">
               <div id="name">
                 <h1 className="text-2xl font-bold">
-                  Liked Books
+                  {t('liked_book')}
                 </h1>
                 <ul>
                   <div className="">

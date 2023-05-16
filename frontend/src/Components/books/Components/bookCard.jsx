@@ -23,10 +23,6 @@ function AddPlayList({idbook, onClose, playlisted, playlistedname}) {
   const [newP, setnewP] = useState(false);
   const [playlistname, setplaylistname] = useState('');
 
-
-
-  console.log(playlistedname);
-
   useEffect(() => {
     const user = auth.currentUser;
     if (user) {
@@ -39,7 +35,6 @@ function AddPlayList({idbook, onClose, playlisted, playlistedname}) {
             ...data,
           }));
           setPlaylists(playlistsList);
-          //console.log(playlistsList);
           
         } else {
           setPlaylists([]);
@@ -188,29 +183,18 @@ const BookCard = ({ id, title, author, description, image }) => {
   const [playlistsnames, setplaylistsnames] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user)=>{
-      if(user){
-        const dbRef = ref(getDatabase(), 'users/'+user.uid+'/favorites/' + id);
-        onValue(dbRef, (snapshot) => {
-          setIsFavorited(snapshot.exists());
-        });
-      }
-    });
-    return unsubscribe;
+    const user = auth.currentUser;
+    if (user) {
+      const dbRef = ref(getDatabase(), 'users/' + user.uid + '/favorites/' + id);
+      const unsubscribe = onValue(dbRef, (snapshot) => {
+        setIsFavorited(snapshot.exists());
+      });
+      
+      return () => {
+        unsubscribe();
+      };
+    }
   }, [id]);
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user)=>{
-      if(user){
-        const dbRef = ref(getDatabase(), 'users/'+user.uid+'/favorites/' + id);
-        onValue(dbRef, (snapshot) => {
-          setIsFavorited(snapshot.exists());
-        });
-      }
-    });
-    return unsubscribe;
-  }, [id]);
-
 
   useEffect(() => {
     async function getplaylistnames() {
@@ -259,19 +243,21 @@ const BookCard = ({ id, title, author, description, image }) => {
   }, [id, showplaylist]);
   
 
-  const handleFavoriteClick = () => {
-    const user = auth.currentUser;
-    if(user){
-      const dbRef = ref(getDatabase(), 'users/'+user.uid+'/favorites/' + id);
-      if (isFavorited) {
-        set(dbRef, null);
-      } else {
-        set(dbRef, true);
+  const handleFavoriteClick = (event) => {
+    event.preventDefault(); // Prevent form submission
+    auth.onAuthStateChanged(async (user) => {
+      if(user){
+        const dbRef = ref(getDatabase(), 'users/'+user.uid+'/favorites/'+id);
+        if (isFavorited) {
+          await set(dbRef, null);
+        } else {
+          await set(dbRef, true);
+        }
+        setIsFavorited(!isFavorited);
+      } else{
+        history.push('/login');
       }
-      setIsFavorited(!isFavorited);
-    } else{
-      history.push('/login');
-    }
+    })
   };
 
   const handlePlayListClick = (e) => {

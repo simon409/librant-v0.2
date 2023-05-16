@@ -72,6 +72,7 @@ export default function Login() {
                         }
                         else{
                             history.push('/');
+                            history.go(0);
                         }
                     });
             

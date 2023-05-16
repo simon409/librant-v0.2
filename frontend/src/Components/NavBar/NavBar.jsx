@@ -335,7 +335,7 @@ const NavBar = () => {
                     </Button>
                     <Button>
                       <Link to="/books" style={{ textDecoration: 'none' }}>
-                        <span className="font-bold text-gray-800">{t('books')}</span>
+                        <span className="font-bold text-gray-800">{t('book')}</span>
                       </Link>
                     </Button>
                     <Button
