@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
   Divider,
-  SwipeableDrawer ,
+  SwipeableDrawer,
   IconButton,
   List,
   ListItem,
@@ -30,17 +30,20 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useTranslation } from "react-i18next";
+import cookies from "../../cookies/Cookies";
 
 
 function DrawerComponent(props) {
-  const {setsearch} = props;
+  const { setsearch } = props;
   const [openDrawer, setOpenDrawer] = useState(false);
   const [categoryOpen, setcategoryOpen] = useState(false);
   const [languageOpen, setlanguageOpen] = useState(false);
   const [categories, setcategories] = useState([]);
   //this check for the user and show his infos
   const [user, setUser] = useState(null);
-  const [t] = useTranslation();
+  const [t, i18n] = useTranslation();
+  var date = new Date();
+  var newDate = new Date(date.setMonth(date.getMonth() + 2));
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
@@ -92,17 +95,38 @@ function DrawerComponent(props) {
       });
   };
   //random color
-  const randomColor = () => {
-    const colors = ['#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722'];
-    return colors[Math.floor(Math.random() * colors.length)];
+  const randomColor = (char) => {
+    const colorMap = {
+      'A': '#e91e63', 'B': '#9c27b0', 'C': '#673ab7', 'D': '#3f51b5', 'E': '#2196f3', 'F': '#00bcd4',
+      'G': '#009688', 'H': '#4caf50', 'I': '#8bc34a', 'J': '#cddc39', 'K': '#ffeb3b', 'L': '#ffc107',
+      'M': '#ff9800', 'N': '#ff5722', 'O': '#795548', 'P': '#607d8b', 'Q': '#009688', 'R': '#4caf50',
+      'S': '#8bc34a', 'T': '#cddc39', 'U': '#ffeb3b', 'V': '#ffc107', 'W': '#ff9800', 'X': '#ff5722',
+      'Y': '#795548', 'Z': '#607d8b',
+    };
+
+    const charUpper = char.toUpperCase();
+    return colorMap[charUpper] || null;
   };
   const closeDraweAndSignOut = () => {
     setOpenDrawer(false);
     handleSignOut();
   }
 
-  const redirect = ({page}) => {
+  const redirect = ({ page }) => {
     history.push(`/${page}`);
+  }
+
+  const changeLanguage = ({lang}) => {
+    cookies.remove("lang");
+    cookies.set("lang", lang, { path: "/", expires: newDate });
+    i18n.changeLanguage(cookies.get("lang"));
+    document.documentElement.lang = lang;
+  }
+
+  const handelCatChange = ({e, category}) => {
+    e.preventDefault();
+    history.push(`/genres/${encodeURIComponent(category)}`);
+    setOpenDrawer(false);
   }
   return (
     <div>
@@ -119,45 +143,64 @@ function DrawerComponent(props) {
         }}>{user ? (
           <><div className="flex h-32">
             <ListItem onClick={() => setOpenDrawer(false)} >
-              <ListItemText>
-                <Link to="/"><Avatar sx={{ width: 50, height: 50, backgroundColor: randomColor() }}>{user.fullname.charAt(0).toUpperCase()}</Avatar> <p className="mt-3 my-auto font-bold">{user.fullname}</p></Link>
+              <ListItemText sx={{
+                alignItems: 'center',
+              }}>
+                <Link to="/">
+                  {
+                    user.imageUrl != "-" ? (
+                      <Avatar
+                        src={user.imageUrl}
+                        sx={{ width: 50, height: 50 }}
+                      />
+                    ) : (
+                      <Avatar sx={{ width: 50, height: 50, backgroundColor: randomColor(user.fullname.charAt(0).toUpperCase()) }}>
+                        {user.fullname.charAt(0).toUpperCase()}
+                      </Avatar>
+                    )
+                  }
+                  <p className="mt-3 my-auto font-bold">{user.fullname}</p></Link>
                 <p>{user.email}</p>
               </ListItemText>
             </ListItem>
           </div>
-          <div className="w-full p-1"></div>
-          <Divider />
-          <div className="w-full p-1"></div>
-          </>):(<>
-          <div className="flex h-32">
+            <div className="w-full p-1"></div>
+            <Divider />
+            <div className="w-full p-1"></div>
+          </>) : (<>
+            <div className="flex h-32">
+              <ListItem onClick={() => setOpenDrawer(false)} >
+                <ListItemText>
+                  <div className="flex gap-3">
+                    <img className="w-16 h-16" src={librant} alt="" />
+                    <p className="text-2xl my-auto font-bold">Librant</p>
+                  </div>
+                </ListItemText>
+              </ListItem>
+            </div>
+          </>)}
+          <Link to="/" className="font-semibold">
             <ListItem onClick={() => setOpenDrawer(false)} >
-              <ListItemText>
-                <div className="flex gap-3">
-                  <img className="w-16 h-16" src={librant} alt="" /> 
-                  <p className="text-2xl my-auto font-bold">Librant</p>
-                </div>
+              <ListItemText sx={{ display: 'flex', gap: '20px' }}>
+                <HomeIcon sx={{ marginInline: 'auto' }} />
+                {" "}
+                {t('home')}
               </ListItemText>
             </ListItem>
-          </div>
-          </>)}
-         <ListItem onClick={() => setOpenDrawer(false)} >
-            <ListItemText sx={{ display: 'flex', gap: '20px'}}>
-              <HomeIcon sx={{marginInline: 'auto'}}/>
-              {" "}
-              <Link to="/" className="font-semibold">{t('home')}</Link>
-            </ListItemText>
-          </ListItem>
-          <ListItem onClick={() => setOpenDrawer(false)}>
-            <ListItemText sx={{ display: 'flex', gap: '20px'}}>
-              <BookIcon sx={{marginInline: 'auto'}}/>
-              {" "}
-              <Link to="/books" className="font-semibold">{t('books')}</Link>
-            </ListItemText>
-          </ListItem>
+          </Link>
+          <Link to="/books" className="font-semibold">
+            <ListItem onClick={() => setOpenDrawer(false)}>
+              <ListItemText sx={{ display: 'flex', gap: '20px' }}>
+                <BookIcon sx={{ marginInline: 'auto' }} />
+                {" "}
+                {t('book')}
+              </ListItemText>
+            </ListItem>
+          </Link>
           <ListItem onClick={() => setcategoryOpen(!categoryOpen)}>
             <ListItemText sx={{ display: 'flex', gap: '20px' }}>
               <CategoryIcon sx={{ marginInline: 'auto' }} />
-              <Link to="/" className="font-semibold">{t('category')}</Link>
+              {t('category')}
             </ListItemText>
           </ListItem>
           <Collapse in={categoryOpen} timeout="auto" unmountOnExit>
@@ -165,9 +208,9 @@ function DrawerComponent(props) {
             {/* Example: <CategoryList /> */}
             <div className="px-5 flex flex-col gap-3">
               {
-                categories ? categories.length>0 ? (
-                  categories.map(cat=>(
-                    <button>
+                categories ? categories.length > 0 ? (
+                  categories.map(cat => (
+                    <button onClick={(e)=>handelCatChange({e: e, category: cat})}>
                       <li className="bg-slate-100 h-14 flex rounded-lg">
                         <p className="my-auto mx-auto text-center">{cat}</p>
                       </li>
@@ -177,76 +220,91 @@ function DrawerComponent(props) {
               }
             </div>
           </Collapse>
-          <ListItem onClick={() => setlanguageOpen(!languageOpen)}>
-            <ListItemText sx={{ display: 'flex', gap: '20px'}}>
-              <LanguageIcon sx={{marginInline: 'auto'}}/>
-              {" "}
-              <Link to="/" className="font-semibold">{t('lang')}</Link>
-            </ListItemText>
-          </ListItem>
+          <Link to="/" className="font-semibold">
+            <ListItem onClick={() => setlanguageOpen(!languageOpen)}>
+              <ListItemText sx={{ display: 'flex', gap: '20px' }}>
+                <LanguageIcon sx={{ marginInline: 'auto' }} />
+                {" "}
+                {t('lang')}
+              </ListItemText>
+            </ListItem>
+          </Link>
           <Collapse in={languageOpen} timeout="auto" unmountOnExit>
             {/* Place your category list component here */}
             {/* Example: <CategoryList /> */}
             <div className="px-5 flex flex-col gap-3">
-              <button>
+              <button onClick={()=>changeLanguage({lang:'fr'})}>
                 <li className="bg-slate-100 h-14 flex rounded-lg">
                   <p className="my-auto mx-auto text-center">Français</p>
                 </li>
               </button>
+              <button onClick={()=>changeLanguage({lang:'en'})}>
                 <li className="bg-slate-100 h-14 flex rounded-lg">
                   <p className="my-auto mx-auto text-center">English</p>
                 </li>
+              </button>
             </div>
           </Collapse>
-          <ListItem onClick={() => setOpenDrawer(false)}>
-            <ListItemText sx={{ display: 'flex', gap: '20px'}}>
-              <SupportIcon sx={{marginInline: 'auto'}}/>
-              {" "}
-              <Link to="/" className="font-semibold">{t('support')}</Link>
-            </ListItemText>
-          </ListItem>
-          <ListItem onClick={() => setsearch(true)}>
-            <ListItemText sx={{ display: 'flex', gap: '20px'}}>
-              <SearchIcon sx={{marginInline: 'auto'}}/>
-              {" "}
-              <Link to="/" className="font-semibold">{t('search')}</Link>
-            </ListItemText>
-          </ListItem>
-          <div className="w-full p-1"></div>
-            <Divider />
-          <div className="w-full p-1"></div>
-          <ListItem onClick={() => setOpenDrawer(false)}>
-            <ListItemText sx={{ display: 'flex', gap: '20px'}}>
-              <SettingsIcon sx={{marginInline: 'auto'}}/>
-              {" "}
-              <Link to="/" className="font-semibold">{t('settings')}</Link>
-            </ListItemText>
-          </ListItem>
-          {!user ? (<>
-          
-          <ListItem onClick={() => redirect({page: 'login'}) }>
-            <ListItemText sx={{ display: 'flex', gap: '20px'}}>
-              <LoginIcon sx={{marginInline: 'auto'}}/>
-              {" "}
-              <Link to="/" className="font-semibold">{t('login')}</Link>
-            </ListItemText>
-          </ListItem>
-          <ListItem onClick={() => redirect({page: 'register'}) }>
-            <ListItemText sx={{ display: 'flex', gap: '20px'}}>
-              <PersonAddIcon sx={{marginInline: 'auto'}}/>
-              {" "}
-              <Link to="/" className="font-semibold">{t('register')}</Link>
-            </ListItemText>
-          </ListItem>
-
-          </>) : (
-            <ListItem onClick={() => closeDraweAndSignOut() }>
-              <ListItemText sx={{ display: 'flex', gap: '20px'}}>
-                <LogoutIcon sx={{marginInline: 'auto'}}/>
+          <Link to="/" className="font-semibold">
+            <ListItem onClick={() => setOpenDrawer(false)}>
+              <ListItemText sx={{ display: 'flex', gap: '20px' }}>
+                <SupportIcon sx={{ marginInline: 'auto' }} />
                 {" "}
-                <Link to="/" className="font-semibold">{t('logout')}</Link>
+                {t('support')}
               </ListItemText>
-          </ListItem>
+            </ListItem>
+          </Link>
+          <Link to="/" className="font-semibold">
+            <ListItem onClick={() => setsearch(true)}>
+              <ListItemText sx={{ display: 'flex', gap: '20px' }}>
+                <SearchIcon sx={{ marginInline: 'auto' }} />
+                {" "}
+                {t('search')}
+              </ListItemText>
+            </ListItem>
+          </Link>
+          <div className="w-full p-1"></div>
+          <Divider />
+          <div className="w-full p-1"></div>
+          <Link to="/profile/settings" className="font-semibold">
+            <ListItem onClick={() => setOpenDrawer(false)}>
+              <ListItemText sx={{ display: 'flex', gap: '20px' }}>
+                <SettingsIcon sx={{ marginInline: 'auto' }} />
+                {" "}
+                {t('settings')}
+              </ListItemText>
+            </ListItem>
+          </Link>
+          {!user ? (<>
+
+            <Link to="/login" className="font-semibold">
+              <ListItem onClick={() => redirect({ page: 'login' })}>
+                <ListItemText sx={{ display: 'flex', gap: '20px' }}>
+                  <LoginIcon sx={{ marginInline: 'auto' }} />
+                  {" "}
+                  {t('login')}
+                </ListItemText>
+              </ListItem>
+            </Link>
+            <Link to="/register" className="font-semibold">
+              <ListItem onClick={() => redirect({ page: 'register' })}>
+                <ListItemText sx={{ display: 'flex', gap: '20px' }}>
+                  <PersonAddIcon sx={{ marginInline: 'auto' }} />
+                  {" "}
+                  {t('register')}
+                </ListItemText>
+              </ListItem>
+            </Link>
+          </>) : (
+            <Link to="/" className="font-semibold">
+              <ListItem onClick={() => closeDraweAndSignOut()}>
+                <ListItemText sx={{ display: 'flex', gap: '20px' }}>
+                  <LogoutIcon sx={{ marginInline: 'auto' }} />
+                  {" "}
+                  {t('logout')}
+                </ListItemText>
+              </ListItem>
+            </Link>
           )}
         </List>
       </SwipeableDrawer>

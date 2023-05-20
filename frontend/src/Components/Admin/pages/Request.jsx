@@ -12,7 +12,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { CloseOutlined } from '@mui/icons-material';
-import { Link } from 'react-router-dom/cjs/react-router-dom';
 
 const Request = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);

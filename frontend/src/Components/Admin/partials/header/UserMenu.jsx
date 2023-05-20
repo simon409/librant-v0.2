@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { auth } from '../../../../firebase';
 import { getDatabase, ref, onValue } from "firebase/database";
 import Transition from '../../utils/Transition';
-import LibrantAvatar from '../../../../assets/img/logo.png'
+import LibrantAvatar from '../../../../assets/img/logo.png';
+import { getAuth, signOut } from "firebase/auth";
+
 
 function UserMenu() {
 
@@ -119,13 +121,12 @@ function UserMenu() {
               </Link>
             </li>
             <li>
-              <Link
+              <button
                 className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3"
-                to="/"
                 onClick={handleSignOut}
               >
                 Sign Out
-              </Link>
+              </button>
             </li>
           </ul>
         </div>

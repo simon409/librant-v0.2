@@ -4,10 +4,9 @@ export const createBook = async (book) => {
   try {
     const database = getDatabase();
     const bookRef = ref(database, "books/");
-    await push(bookRef, book);
-    history.push("/showbooks");
-    alert("added")
-    return bookRef.id;
+    const newBookRef = await push(bookRef, book);
+    const bookID = newBookRef.key;
+    return bookID;
   } catch (error) {
     console.error("Error creating book: ", error);
     //throw new Error("Could not create book");

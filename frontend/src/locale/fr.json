@@ -66,6 +66,9 @@
     "liked_book":"Livres aimés",
     "borrowed_books":"Livres empruntés",
 
+    "You_saturday_and_sunday" : "Vous ne pouvez pas emprunter de livres le samedi et le dimanche.",
+
+
     "click_to_search" : "Cliquez pour rechercher",
     "goodmorning" : "Bonjour",
     "goodafternoon" : "Bon après-midi",
@@ -92,5 +95,13 @@
     "book_title":"Titre du livre",
     "overdue":"En retard",
     "borrow_date":"Date d'emprunt",
-    "return_date":"Date de retour"
+    "return_date":"Date de retour",
+    "confirmReturn": "Êtes-vous sûr de vouloir retourner le livre ?",
+    "returnRequested": "Retour demandé",
+    "shouldHaveReturned": "Le retour aurait dû être effectué il y a ",
+    "daysAgo": " jours",
+    "returnIn": "Retour dans ",
+    "days": " jours",
+    "return": "Retour",
+    "noBorrowedBooks": "Aucun livre emprunté"
 }

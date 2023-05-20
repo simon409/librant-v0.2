@@ -68,56 +68,50 @@ export default function ProfileHeaderInfos() {
   return (
     <div className='shadow-md'>
       <div className="w-full h-[300px] bg-gradient-to-r from-mypalette-1 to-mypalette-2 rounded-t-lg">
-        <div className="relative">
-          <div className="absolute -bottom-96 lg:left-16 left-20">
-            {
-              user ? (
-                <>
-                  <Badge
-                    overlap="circular"
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    badgeContent={
-                      <div onClick={handelCameraClick} className="bg-slate-200 rounded-full p-3 cursor-pointer hover:bg-slate-300 transition-all delay-100 ease-in-out border-8 border-white">
-                        <Camera />
-                      </div>
-                    }
+        <div className="relative flex justify-center items-center lg:justify-start lg:items-start lg:pl-14 top-40">
+          {user ? (
+            <>
+              <Badge
+                overlap="circular"
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                badgeContent={
+                  <div onClick={handelCameraClick} className="bg-slate-200 rounded-full p-3 cursor-pointer hover:bg-slate-300 transition-all delay-100 ease-in-out border-8 border-white">
+                    <Camera />
+                  </div>
+                }
+              >
+                {user.imageUrl !== "-" ? (
+                  <Avatar
+                    src={user.imageUrl}
+                    sx={{
+                      width: '200px',
+                      height: '200px',
+                      fontSize: '50px',
+                      border: 'solid 7px white'
+                    }}
+                  />
+                ) : (
+                  <Avatar
+                    sx={{
+                      width: '200px',
+                      height: '200px',
+                      fontSize: '50px',
+                      border: 'solid 7px white'
+                    }}
                   >
-                    {
-                      user.imageUrl != "-" ? (
-                        <Avatar
-                          src={user.imageUrl}
-                          sx={{
-                            width: '200px',
-                            height: '200px',
-                            fontSize: '50px',
-                            border: 'solid 7px white'
-                          }}
-                        />
-                      ) : (
-                        <Avatar
-                          sx={{
-                            width: '200px',
-                            height: '200px',
-                            fontSize: '50px',
-                            border: 'solid 7px white'
-                          }}>{user.fullname.charAt(0).toUpperCase()}</Avatar>
-                      )
-                    }
-                  </Badge>
-
-                </>
-              ) :
-                (
-                  <></>
-                )
-            }
-
-          </div>
+                    {user.fullname.charAt(0).toUpperCase()}
+                  </Avatar>
+                )}
+              </Badge>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
       {/* name and status */}
       <div>
-        <div className="flex flex-col gap-2 pt-20 bg-white py-4 px-14 rounded-b-lg">
+        <div className="flex flex-col gap-2 pt-20 bg-white py-4 px-10 rounded-b-lg">
           {
             user ? (
               <div id="name">
@@ -132,7 +126,8 @@ export default function ProfileHeaderInfos() {
               <>Loading ...</>
             )
           }
-          <div className="my-5 w-fit">
+          <div className="my-5 w-full">
+            <div className="flex-gradient" />
             <div className="flex gap-3 overflow-x-auto">
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Button
@@ -186,6 +181,7 @@ export default function ProfileHeaderInfos() {
                 </Button>
               </div>
             </div>
+            <div className="flex-gradient" />
           </div>
         </div>
       </div>

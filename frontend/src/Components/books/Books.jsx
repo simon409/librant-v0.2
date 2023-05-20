@@ -198,7 +198,7 @@ export default function Books() {
         ) : filteredBooks.length > 0 ? (
           <>
             <TransitionGroup className="book-list grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-1 gap-4">
-              {filteredBooks.map((book) => (
+              {currentBooks.map((book) => (
                 <CSSTransition key={book.id} timeout={500} classNames="book">
                   <li className='list-none mx-auto book-item relative transition-transform delay-150 ease-linear w-full'>
                     {

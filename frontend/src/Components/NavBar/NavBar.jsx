@@ -28,6 +28,7 @@ import DrawerComponent from "./DrawerComponent";
 //for the usernav
 import Avatar from '@mui/material/Avatar';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import { Help } from "@mui/icons-material";
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Settings from '@mui/icons-material/Settings';
@@ -35,9 +36,9 @@ import Logout from '@mui/icons-material/Logout';
 import Dashboard from "@mui/icons-material/Dashboard";
 import './style.css';
 import cookies from "../../cookies/Cookies";
-import i18n from "../../i18n";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { useTranslation } from "react-i18next";
+import { button } from "@material-tailwind/react";
 
 
 const NavBar = () => {
@@ -65,10 +66,6 @@ const NavBar = () => {
     listening,
     browserSupportsSpeechRecognition
   } = useSpeechRecognition();
-
-  if (!browserSupportsSpeechRecognition) {
-    return <span>Browser doesn't support speech recognition.</span>;
-  }
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -191,33 +188,6 @@ const NavBar = () => {
     fetchBooks();
   }, [searchbook]);
 
-  /*useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user)=>{
-      if(user){
-        const dbRef = ref(getDatabase(), 'users/'+user.uid+'/favorites/' + id);
-        onValue(dbRef, (snapshot) => {
-          setIsFavorited(snapshot.exists());
-        });
-      }
-    });
-    return unsubscribe;
-  }, [id]);*/
-
-  /*const handleFavoriteClick = ({id}) => {
-    const user = auth.currentUser;
-    if(user){
-      const dbRef = ref(getDatabase(), 'users/'+user.uid+'/favorites/' + id);
-      if (isFavorited) {
-        set(dbRef, null);
-      } else {
-        set(dbRef, true);
-      }
-      setIsFavorited(!isFavorited);
-    } else{
-      history.push('/login');
-    }
-  };*/
-
   //sign the user out of the application
   const history = useHistory();
 
@@ -245,6 +215,7 @@ const NavBar = () => {
     cookies.remove("lang");
     cookies.set("lang", lang, { path: "/", expires: newDate });
     i18n.changeLanguage(cookies.get("lang"));
+    document.documentElement.lang = lang;
   }
 
   const randomColor = (char) => {
@@ -278,7 +249,8 @@ const NavBar = () => {
             {/* let you type in the search bar after the event */}
             <TextField fullWidth label="Type to search ..." onChange={(event) => setsearchbook(event.target.value)} value={searchbook != null ? searchbook : transcript} />
             {
-              listening ? <Button onClick={SpeechRecognition.stopListening}><MicNoneIcon /> </Button> : <Button onClick={SpeechRecognition.startListening}><KeyboardVoiceIcon /></Button>
+              //add something to show browser doesn't support that
+              !browserSupportsSpeechRecognition ? (<button><Help /></button>) : listening ? <Button onClick={SpeechRecognition.stopListening}><MicNoneIcon /> </Button> : <Button onClick={SpeechRecognition.startListening}><KeyboardVoiceIcon /></Button>
             }
           </div>
           <div className="h-[400px] overflow-y-scroll">
@@ -551,11 +523,7 @@ const NavBar = () => {
                           transformOrigin={{ horizontal: 'right', vertical: 'top' }}
                           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                         >
-                          <MenuItem onClick={handleClose}>
-                            <Link to="/profile" className="flex">
-                              <Avatar src={user.imageUrl} sx={{ width: 32, height: 32 }} /> <p className="my-auto">{user.fullname}</p>
-                            </Link>
-                          </MenuItem>
+                          
                           {
                             user.role === 'admin' ? (
                               <>
@@ -568,7 +536,13 @@ const NavBar = () => {
                                   </Link>
                                 </MenuItem>
                               </>
-                            ) : (<></>)
+                            ) : (<>
+                              <MenuItem onClick={handleClose}>
+                                <Link to="/profile" className="flex">
+                                  <Avatar src={user.imageUrl} sx={{ width: 32, height: 32 }} /> <p className="my-auto">{user.fullname}</p>
+                                </Link>
+                              </MenuItem>
+                            </>)
                           }
                           <Divider />
                           <MenuItem onClick={handleClose}>

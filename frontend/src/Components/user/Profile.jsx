@@ -127,7 +127,7 @@ export default function Profile() {
     const user = auth.currentUser;
     const db = getDatabase();
     if(!user) return;
-    if (window.confirm('Are you sure you want to return the book?')) {
+    if (window.confirm(t('confirmReturn'))) {
       // update requested.
       const today = new Date();
       const borrowRef = ref(db, `users/${user.uid}/borrows/${borrowId}`);
@@ -171,29 +171,29 @@ export default function Profile() {
                                     {/*here i want to show the due date that is in borrows */}
                                     {(() => {
                                       if (book.borrow.requested) {
-                                        return <p className='text-green-600 font-bold'>Return requested</p>
+                                        return <p className='text-green-600 font-bold'>{t('returnRequested')}</p>
                                       }
                                       const today = new Date();
                                       const retDate = new Date(book.borrow.return_date);
                                       const diff = retDate - today;
                                       const days = -1 * Math.floor(diff / (1000 * 60 * 60 * 24));
                                       if (days > 0) {
-                                        return <p className='text-red-500 font-bold'>Should have returned {days} days ago</p>;
+                                        return <p className='text-red-500 font-bold'>{t('shouldHaveReturned')} {days} {t('daysAgo')}</p>;
                                       }
                                       else {
-                                        return <p className='text-green-600 font-bold'>Return in {-days} days</p>
+                                        return <p className='text-green-600 font-bold'>{t('returnIn')} {-days} {t('days')}</p>
                                       }
                                     })()}
                                   </div>
                                   {
-                                    book.borrow.requested ? (<></>) : (<button onClick={(e) => RequestReturn({ e: e, borrowId: book.borrow.id })} className='px-4 py-2 bg-mypalette-4 rounded-lg text-white font-bold hover:bg-mypalette-5'>Return</button>)
+                                    book.borrow.requested ? (<></>) : (<button onClick={(e) => RequestReturn({ e: e, borrowId: book.borrow.id })} className='px-4 py-2 bg-mypalette-4 rounded-lg text-white font-bold hover:bg-mypalette-5'>{t('return')}</button>)
                                   }
                                 </div>
                               </div>
                             </li>
                           </CSSTransition>
                         )) : (
-                          <div>No Borrowed Books</div>
+                          <div>{t('noBorrowedBooks')}</div>
                         ) : (<></>)}
                       </TransitionGroup>
                     </div>

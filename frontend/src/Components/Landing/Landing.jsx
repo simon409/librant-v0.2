@@ -9,6 +9,7 @@ function Landing() {
         <>
             <NavBar />
             <Hero />
+            <hr className="block mx-10 lg:hidden"/>
             <Recommendations />
         </>
     )

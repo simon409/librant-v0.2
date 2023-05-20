@@ -136,6 +136,15 @@ function BorrowOverlay({idBook, onClose}){
     }
   };
 
+  // Function to get the minimum date (today's date)
+  const getMinDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   return(
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0" style={{ backdropFilter: 'blur(10px)' }} onClick={onClose} />
@@ -158,10 +167,21 @@ function BorrowOverlay({idBook, onClose}){
                 "-" +
                 DateEmprint.getDate().toString().padStart(2, 0)
               }
-              onChange={(e) => {
-                setDateEmprint(new Date(e.target.value));
-              }}
               //add min function
+              min={getMinDate()}
+              onChange={(e) => {
+                const selectedDate = new Date(e.target.value);
+                const dayOfWeek = selectedDate.getDay(); // Sunday is 0, Monday is 1, and so on
+            
+                // Check if selected date is a Saturday or Sunday
+                if (dayOfWeek === 0 || dayOfWeek === 6) {
+                  e.preventDefault(); // Prevent selecting Sundays and Saturdays
+                  setError(t('You_saturday_and_sunday'));
+                } else {
+                  setDateEmprint(selectedDate);
+                  setError(null);
+                }
+              }}
             />
           </div>
           <div className="relative mt-5">

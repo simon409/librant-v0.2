@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from "react";
-import { emphasize, styled } from '@mui/material/styles';
+import { emphasize, styled, useTheme } from '@mui/material/styles';
 import { getDatabase, onValue, ref } from "firebase/database";
 import { useParams, useHistory } from "react-router-dom/cjs/react-router-dom";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import NavBar from "../NavBar/NavBar";
 import {
     TransitionGroup,
@@ -16,7 +17,7 @@ import {
     Select,
     MenuItem,
     Breadcrumbs,
-    Chip
+    Chip,
   } from "@mui/material";
   import { Home, ExpandMore } from "@mui/icons-material";
   import BookCard from "./Components/bookCard";
@@ -60,6 +61,8 @@ export default function ShowBookByCategory(){
     const decodedCat = decodeURIComponent(category);
     const history = useHistory();
     const [t] = useTranslation();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.up('sm'));
 
     //declare useState book - searchword
     const [books, setBooks] = useState([]);
@@ -111,7 +114,7 @@ export default function ShowBookByCategory(){
         <div>
             <NavBar />
             <div className="mt-20 mx-5">
-                  <div role="presentation" onClick={handleClick} className="absolute top-28 left-14 z-20 -translate-y-1/2">
+                  <div role="presentation" onClick={handleClick} className="absolute top-28 left-8 lg:left-14 z-20 -translate-y-1/2">
                     <Breadcrumbs aria-label="breadcrumb">
                       <StyledBreadcrumb
                         component="a"
@@ -122,7 +125,7 @@ export default function ShowBookByCategory(){
                       />
                       <StyledBreadcrumb component="a" href="/books" onClick={()=>handleClick(1)} label={t('book')} />
                       <StyledBreadcrumb
-                        label={decodedCat}
+                        label={!isMobile ? decodedCat.substring(0, Math.min(decodedCat.indexOf('\n') !== -1 ? decodedCat.indexOf('\n') : 12, 12)) : decodedCat}
                         deleteIcon={<ExpandMore />}
                         onClick={()=>handleClick(2)}
                       />
@@ -131,23 +134,23 @@ export default function ShowBookByCategory(){
                 {/*Image ads*/}
                 <div className="bg-blue-500 w-full h-96 rounded-lg">
                   <img src="https://images.unsplash.com/photo-1522407183863-c0bf2256188c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" className='object-cover h-full w-full rounded-lg bg-no-repeat bg-bottom brightness-75 relative' alt="imagetest" />
-                  <div id="search" className='absolute w-full top-1/3 left-1/2 z-20 text-white -translate-y-1/2 -translate-x-1/2 text-4xl text-center'>
-                      <h1>{t('books_like')} <b><u>{decodedCat}</u></b></h1>
+                  <div id="search" className='absolute w-full top-[45%] lg:top-1/3 left-1/2 z-20 text-white -translate-y-1/2 -translate-x-1/2 text-4xl text-center'>
+                      <h1 className="text-lg px-5 lg:text-2xl lg:px-0">{t('books_like')} <br /> <b><u>{decodedCat}</u></b></h1>
                       <div className="flex justify-center gap-2">
                       <FormControl sx={{background: '#fff', borderRadius: '5px', width: '300px', marginTop:'20px'}}>
                       <TextField
-                      fullWidth 
-                      type="text"
-                      variant='outlined'
-                      placeholder={t('type_to_search')}
-                      onChange={e=>handleSearch(e)}
+                        fullWidth 
+                        type="text"
+                        variant='outlined'
+                        placeholder={t('type_to_search')}
+                        onChange={e=>handleSearch(e)}
                       />
                       </FormControl>
                   </div>
                 </div>
             </div>
             
-            <h1 className="text-center text-3xl mt-5">{t('here_are_books_related')} {decodedCat}</h1>
+            <h1 className="text-center text-lg lg:text-3xl mt-5">{t('here_are_books_related')} <br /> <b> {decodedCat} </b></h1>
             {/* book listing */}
             <ul className='mb-6'>
                 {loading ? (

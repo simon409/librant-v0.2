@@ -22,3 +22,11 @@
   transform: translateY(20px);
   transition: all 500ms ease-out;
 }
+
+.hoverable-media {
+  transition: transform 0.3s ease;
+}
+
+.hoverable-media:hover {
+  transform: scale(1.05);
+}

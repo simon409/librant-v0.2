@@ -23,6 +23,8 @@
     "support":"Support",
     "search":"Search",
 
+    "You_saturday_and_sunday" : "You can't borrow books at saturday and sunday.",
+
     "not_available":"Unavailable",
     "available":"Available",
     "borrow_it":"Borrow it",
@@ -92,5 +94,14 @@
     "book_title":"Book title",
     "overdue":"Overdue",
     "borrow_date":"Borrow date",
-    "return_date":"Return date"
+    "return_date":"Return date",
+
+    "confirmReturn": "Are you sure you want to return the book?",
+    "returnRequested": "Return requested",
+    "shouldHaveReturned": "Should have returned ",
+    "daysAgo":"days ago",
+    "returnIn": "Return in ",
+    "days" : " days",
+    "return": "Return",
+    "noBorrowedBooks": "No Borrowed Books"
 }

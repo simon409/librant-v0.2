@@ -16,7 +16,7 @@ import { Favorite, FavoriteBorder, PlaylistAdd, PlaylistAddCheck } from '@mui/ic
 
 import { getDatabase, ref, onValue, set, get } from 'firebase/database';
 import { auth } from '../../../firebase';
-
+import "../style/style.css";
 
 function AddPlayList({idbook, onClose, playlisted, playlistedname}) {
   const [playlists, setPlaylists] = useState([]);
@@ -273,7 +273,7 @@ const BookCard = ({ id, title, author, description, image }) => {
       <Card className="max-w-md mx-auto mt-5 cursor-pointer" onClick={handleClick}>
         
         <div className="relative">
-          <CardMedia className="h-48 md:h-48 lg:h-48" image={image} title={title} />
+          <CardMedia className="h-48 md:h-48 lg:h-48 hoverable-media" image={image} title={title} />
           <div className="absolute top-2 right-2 z-10 flex gap-2">
           <IconButton 
               color={isPlayListed ? "primary" : "default"} 

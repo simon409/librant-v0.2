@@ -20,7 +20,6 @@ import axios from 'axios';
 
 //graphics
 import DashboardCard04 from '../partials/dashboard/DashboardCard04';
-import { event } from 'react-ga';
 
 function UserInfosside({userId, onClose, setMailSection, setUserMail}){
   const [User, setUser] = useState(null);
@@ -447,7 +446,7 @@ function Dashboard() {
 <table border="0" cellpadding="0" cellspacing="0" class="html_block block-1" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
 <tr>
 <td class="pad">
-<div align="center" style="font-family:Lato, Tahoma, Verdana, Segoe, sans-serif;text-align:start;"><div class="our-class"> Message : <br>${message} </div></div>
+<div align="center" id="message" style="font-family:Lato, Tahoma, Verdana, Segoe, sans-serif;text-align:start;"><div class="our-class"> Message : <br>${message} </div></div>
 </td>
 </tr>
 </table>
@@ -588,10 +587,11 @@ function Dashboard() {
       htmlText,
     })
     .then(response => {
-      console.log(response.data.message);
+      setmessage("Message sent successfully");
     })
     .catch(error => {
-      console.log(error.response.data.message);
+      setmessage("Error sending the message - try again after 2 min or contact the developper");
+
     });
   }
 
@@ -609,6 +609,7 @@ function Dashboard() {
 
   const prevPageRef = useRef();
   const history = useHistory();
+  const [message, setmessage] = useState(null)
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -736,7 +737,7 @@ function Dashboard() {
           <div className='absolute inset-0 z-50 w-screen h-screen'>
             <div className="absolute w-full h-full" style={{ backdropFilter: 'blur(10px)' }}  onClick={()=>setMailSection(false)}></div>
             <div className="relative w-1/2 top-1/2 left-1/2 bg-slate-200 -translate-x-1/2 -translate-y-1/2 p-4 rounded-lg">
-              <TextField placeholder='Destination' sx={{backgroundColor: 'white', marginBottom: '10px', color: 'black'}} onChange={(e)=>setUserMail(e.target.value)} value={UserMail} fullWidth />
+              <TextField disabled placeholder='Destination' sx={{backgroundColor: 'white', marginBottom: '10px', color: 'black'}} onChange={(e)=>setUserMail(e.target.value)} value={UserMail} fullWidth />
               <TextField placeholder='Subject' sx={{backgroundColor: 'white', marginBottom: '10px', color: 'black'}} onChange={(e)=>setSubject(e.target.value)} value={Subject} fullWidth/>
               <Editor
                 apiKey={import.meta.env.VITE_TINY_API_CODE}
@@ -757,12 +758,23 @@ function Dashboard() {
                 }}
                 placeholder="Enter your text here"
               />
+
               <Button fullWidth sx={{
                 marginTop: '10px',
                 backgroundColor: 'white'
               }}
               onClick={(e) => SendMail({event: e, to: UserMail, message: content, subject: Subject})}
               >Send</Button>
+              {
+                message != null ? (
+                  <div className={`w-full flex justify-between mt-3 p-3 ${message != "Error sending the message - try again after 2 min or contact the developper" ? 'bg-green-400 border-green-800' : 'bg-red-400 border-red-800'} border-[1px] rounded-lg`}>
+                    <p>{message}</p>
+                    <button>
+                      <CloseOutlined onClick={()=>setmessage(null)}/>
+                    </button>
+                  </div>
+                ) : (<></>)
+              }
             </div>
           </div>
         )
