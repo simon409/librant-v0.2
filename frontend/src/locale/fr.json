@@ -103,5 +103,6 @@
     "returnIn": "Retour dans ",
     "days": " jours",
     "return": "Retour",
-    "noBorrowedBooks": "Aucun livre emprunté"
+    "noBorrowedBooks": "Aucun livre emprunté",
+    "hereIsOurNewBook":"Voici notre nouveau livre"
 }

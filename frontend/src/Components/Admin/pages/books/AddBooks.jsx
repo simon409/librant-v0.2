@@ -95,7 +95,7 @@ const AddBooks = () => {
             title: values.title,
             author: values.author,
             description: values.description,
-            quantity: values.quantity,
+            Quantity: values.quantity,
             image: imageUrl,
             categories,
         };
@@ -259,8 +259,7 @@ const AddBooks = () => {
                                                                                 style="font-size: 12px; font-family: Lato, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #ffffff; line-height: 1.2;">
                                                                                 <p
                                                                                     style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;">
-                                                                                    <span style="font-size:38px;"><strong>Your
-                                                                                            modern library</strong></span></p>
+                                                                                    <span style="font-size:38px;"><strong>Your modern library</strong></span></p>
                                                                             </div>
                                                                         </div>
                                                                     </td>
@@ -278,16 +277,14 @@ const AddBooks = () => {
                                                                                 style="font-size: 12px; font-family: Lato, Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #ffffff; line-height: 1.2;">
                                                                                 <p
                                                                                     style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;">
-                                                                                    <span style="font-size:13px;"><strong>powered
-                                                                                            by iga casablanca</strong></span>
+                                                                                    <span style="font-size:13px;"><strong>powered by iga casablanca</strong></span>
                                                                                 </p>
                                                                             </div>
                                                                         </div>
                                                                     </td>
                                                                 </tr>
                                                             </table>
-                                                            <div class="spacer_block block-5"
-                                                                style="height:30px;line-height:30px;font-size:1px;"> </div>
+                                                            <div class="spacer_block block-5" style="height:30px;line-height:30px;font-size:1px;"> </div>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -310,7 +307,7 @@ const AddBooks = () => {
                                                         <td class="column column-1"
                                                             style="mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-weight: 400; text-align: left; vertical-align: top; border-top: 0px; border-right: 0px; border-bottom: 0px; border-left: 0px;"
                                                             width="100%">
-                                                            <h1 style="font-family: Lato, Tahoma, Verdana, Segoe, sans-serif;">Here is our new book</h1>
+                                                            <h1 style="font-family: Lato, Tahoma, Verdana, Segoe, sans-serif;">${t('hereIsOurNewBook')}</h1>
                                                             <table border="0" cellpadding="0" cellspacing="0"
                                                                 class="html_block block-1" role="presentation"
                                                                 style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
