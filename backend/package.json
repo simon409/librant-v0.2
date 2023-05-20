@@ -9,8 +9,9 @@
   "author": "SIMON",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "nodemailer": "^6.9.1",
-    "cors": "^2.8.5"
+    "nodemailer": "^6.9.1"
   }
 }

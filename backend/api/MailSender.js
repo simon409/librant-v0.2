@@ -2,6 +2,7 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const app = express();
 const cors = require('cors');
+require('dotenv').config();
 
 app.use(cors())
 app.use(express.json()); // Parse incoming JSON data
@@ -11,12 +12,13 @@ app.post('/send-email', (req, res) => {
 
   const transporter = nodemailer.createTransport({
     //mailing config
-    service: 'gmail',
-    host: 'smtp.gmail.com',
-    port: 587,
+    //mailing config
+    service: process.env.SERVICE_NAME,
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
     auth: {
-      user: 'librantlib@gmail.com',
-      pass: 'inbtljjzgdracuww',
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASSWORD,
     },
   });
 
