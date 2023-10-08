@@ -146,7 +146,7 @@ function DrawerComponent(props) {
               <ListItemText sx={{
                 alignItems: 'center',
               }}>
-                <Link to="/">
+                <Link to="/profile">
                   {
                     user.imageUrl != "-" ? (
                       <Avatar

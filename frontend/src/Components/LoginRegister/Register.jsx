@@ -24,7 +24,7 @@ export default function Register() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const domain = 'iga.ac.ma'; // Replace with your desired domain
+        const domain = 'etud.iga.ac.ma'; // Replace with your desired domain
         const emailRegex = new RegExp(`^[a-zA-Z0-9_.+-]+@${domain}$`);
 
         if (!emailRegex.test(email)) {
